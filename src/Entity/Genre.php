@@ -40,6 +40,7 @@ class Genre
     public function __construct()
     {
         $this->jeuVideos = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
