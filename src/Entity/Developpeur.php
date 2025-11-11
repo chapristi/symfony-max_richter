@@ -2,30 +2,30 @@
 
 namespace App\Entity;
 
-use App\Repository\EditeurRepository;
+use App\Repository\DeveloppeurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: EditeurRepository::class)]
-class Editeur
+#[ORM\Entity(repositoryClass: DeveloppeurRepository::class)]
+class Developpeur
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 100)]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 100, nullable: true)]
+    #[ORM\Column(length: 100)]
     private ?string $pays = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $siteWeb = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
     #[ORM\Column]
@@ -37,14 +37,15 @@ class Editeur
     /**
      * @var Collection<int, JeuVideo>
      */
-    #[ORM\OneToMany(targetEntity: JeuVideo::class, mappedBy: 'editeur')]
+    #[ORM\OneToMany(targetEntity: JeuVideo::class, mappedBy: 'idDeveloppeur')]
     private Collection $jeuVideos;
 
     public function __construct()
     {
-        $this->jeuVideos = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
+        $this->jeuVideos = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -68,7 +69,7 @@ class Editeur
         return $this->pays;
     }
 
-    public function setPays(?string $pays): static
+    public function setPays(string $pays): static
     {
         $this->pays = $pays;
 
@@ -80,7 +81,7 @@ class Editeur
         return $this->siteWeb;
     }
 
-    public function setSiteWeb(?string $siteWeb): static
+    public function setSiteWeb(string $siteWeb): static
     {
         $this->siteWeb = $siteWeb;
 
@@ -92,7 +93,7 @@ class Editeur
         return $this->description;
     }
 
-    public function setDescription(?string $description): static
+    public function setDescription(string $description): static
     {
         $this->description = $description;
 
@@ -135,7 +136,7 @@ class Editeur
     {
         if (!$this->jeuVideos->contains($jeuVideo)) {
             $this->jeuVideos->add($jeuVideo);
-            $jeuVideo->setEditeur($this);
+            $jeuVideo->setIdDeveloppeur($this);
         }
 
         return $this;
@@ -145,13 +146,14 @@ class Editeur
     {
         if ($this->jeuVideos->removeElement($jeuVideo)) {
             // set the owning side to null (unless already changed)
-            if ($jeuVideo->getEditeur() === $this) {
-                $jeuVideo->setEditeur(null);
+            if ($jeuVideo->getIdDeveloppeur() === $this) {
+                $jeuVideo->setIdDeveloppeur(null);
             }
         }
 
         return $this;
     }
+
     #[ORM\PreUpdate]
     public function setUpdatedAtValue(): void
     {

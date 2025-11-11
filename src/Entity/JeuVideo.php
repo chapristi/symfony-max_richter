@@ -17,9 +17,6 @@ class JeuVideo
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $developpeur = null;
-
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTime $dateSortie = null;
 
@@ -46,6 +43,9 @@ class JeuVideo
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'jeuVideos')]
+    private ?Developpeur $developpeur = null;
+
 
     public function __construct()
     {
@@ -69,17 +69,6 @@ class JeuVideo
         return $this;
     }
 
-    public function getDeveloppeur(): ?string
-    {
-        return $this->developpeur;
-    }
-
-    public function setDeveloppeur(string $developpeur): static
-    {
-        $this->developpeur = $developpeur;
-
-        return $this;
-    }
 
     public function getDateSortie(): ?\DateTime
     {
@@ -175,5 +164,22 @@ class JeuVideo
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    public function getDeveloppeur(): ?Developpeur
+    {
+        return $this->developpeur;
+    }
+
+    public function setDeveloppeur(?Developpeur $idDeveloppeur): static
+    {
+        $this->developpeur = $idDeveloppeur;
+
+        return $this;
+    }
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable();
     }
 }

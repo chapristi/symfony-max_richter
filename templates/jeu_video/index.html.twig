@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}JeuVideo index{% endblock %}
+{% block body %}
+
+    <h1>JeuVideo index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Titre</th>
+                <th>DateSortie</th>
+                <th>Prix</th>
+                <th>Description</th>
+                <th>Editeur</th>
+                <th>Genre</th>
+                {# <th>ImageUrl</th> #}
+                {# <th>CreatedAt</th>#}
+               {# <th>UpdatedAt</th>#}
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for jeu_video in jeu_videos %}
+            <tr>
+                <td>{{ jeu_video.id }}</td>
+                <td>{{ jeu_video.titre }}</td>
+                <td>{{ jeu_video.dateSortie ? jeu_video.dateSortie|date('d/m/Y') : '' }}</td>
+                <td>{{ jeu_video.prix|number_format(2,',') }} €</td>
+                <td>{{ jeu_video.description }}</td>
+                <td>{{ jeu_video.editeur.nom }}</td>
+                <td>{{ jeu_video.genre.nom }}</td>
+                {# <td>{{ jeu_video.imageUrl }}</td> #}
+    {#  <td>{{ jeu_video.createdAt ? jeu_video.createdAt|date('Y-m-d H:i:s') : '' }}</td> #}
+    {#    <td>{{ jeu_video.updatedAt ? jeu_video.updatedAt|date('Y-m-d H:i:s') : '' }}</td>#}
+                <td>
+                    <a href="{{ path('app_jeu_video_show', {'id': jeu_video.id}) }}">Consulter</a>
+                    <a href="{{ path('app_jeu_video_edit', {'id': jeu_video.id}) }}">Modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_jeu_video_new') }}">Create new</a>
+{% endblock %}
