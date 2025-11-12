@@ -36,8 +36,8 @@ class JeuVideoType extends AbstractType
                 'constraints' => [
                     new File(
                         maxSize: '1024k',
-                        extensions: ['png, jpg', 'jpeg'],
-                        extensionsMessage: "Veuillez selectionner un type d'image valdie (JPEG,PNG)",
+                        extensions: ['png', 'jpg', 'jpeg'],
+                        extensionsMessage: "Veuillez selectionner un type d'image valdie (JPEG,JPG,PNG)",
                     )
                 ],
             ])

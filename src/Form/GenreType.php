@@ -15,12 +15,6 @@ class GenreType extends AbstractType
             ->add('nom')
             ->add('description')
             ->add('actif')
-            ->add('createdAt', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('updatedAt', null, [
-                'widget' => 'single_text',
-            ])
         ;
     }
 

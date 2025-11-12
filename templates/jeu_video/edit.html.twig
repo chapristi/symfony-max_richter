@@ -3,7 +3,7 @@
 {% block title %}Edit JeuVideo{% endblock %}
 
 {% block body %}
-    <h1>Edit JeuVideo</h1>
+    <h1>Modifier le jeu video {{ jeu_video.titre }}</h1>
 
     {{ include('jeu_video/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 

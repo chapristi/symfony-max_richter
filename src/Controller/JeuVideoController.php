@@ -7,6 +7,7 @@ use App\Form\JeuVideoType;
 use App\Repository\JeuVideoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -30,15 +31,24 @@ final class JeuVideoController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $image = $form->get('image')->getData();
+            $image = $form->get('imageUrl')->getData();
             if ($image) {
-                $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = $jeuVideo->getTitre() . '-' . uniqid() . '.' . $image->guessExtension();
+                try {
+                    $image->move(
+                        $this->getParameter('kernel.project_dir') . '/public/assets/uploads',
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Erreur lors du téléchargement de l\'image : ' . $e->getMessage());
+                }
+                $jeuVideo->setImageUrl('assets/uploads/' . $newFilename);
             }
-            $jeuVideo->setImageUrl($jeuVideo->getTitre() . $jeuVideo->getId());
+
             $entityManager->persist($jeuVideo);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_jeu_video_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_jeu_video_index');
         }
 
         return $this->render('jeu_video/new.html.twig', [
@@ -46,6 +56,7 @@ final class JeuVideoController extends AbstractController
             'form' => $form,
         ]);
     }
+
 
     #[Route('/{id}', name: 'app_jeu_video_show', methods: ['GET'])]
     public function show(JeuVideo $jeuVideo): Response

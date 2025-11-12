@@ -9,6 +9,7 @@
         <thead>
             <tr>
                 <th>Id</th>
+                <th>Image</th>
                 <th>Titre</th>
                 <th>DateSortie</th>
                 <th>Prix</th>
@@ -25,12 +26,14 @@
         {% for jeu_video in jeu_videos %}
             <tr>
                 <td>{{ jeu_video.id }}</td>
+                <td><img alt="image" src="{{ asset('' ~ jeu_video.imageUrl) }}" /></td>
                 <td>{{ jeu_video.titre }}</td>
                 <td>{{ jeu_video.dateSortie ? jeu_video.dateSortie|date('d/m/Y') : '' }}</td>
                 <td>{{ jeu_video.prix|number_format(2,',') }} €</td>
                 <td>{{ jeu_video.description }}</td>
                 <td>{{ jeu_video.editeur.nom }}</td>
                 <td>{{ jeu_video.genre.nom }}</td>
+
                 {# <td>{{ jeu_video.imageUrl }}</td> #}
     {#  <td>{{ jeu_video.createdAt ? jeu_video.createdAt|date('Y-m-d H:i:s') : '' }}</td> #}
     {#    <td>{{ jeu_video.updatedAt ? jeu_video.updatedAt|date('Y-m-d H:i:s') : '' }}</td>#}

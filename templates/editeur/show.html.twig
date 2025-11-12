@@ -27,18 +27,10 @@
                 <th>Description</th>
                 <td>{{ editeur.description }}</td>
             </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ editeur.createdAt ? editeur.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ editeur.updatedAt ? editeur.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_editeur_index') }}">back to list</a>
+    <a href="{{ path('app_editeur_index') }}">Retour à la liste</a>
 
     <a href="{{ path('app_editeur_edit', {'id': editeur.id}) }}">edit</a>
 
