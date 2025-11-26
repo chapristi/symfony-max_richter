@@ -19,6 +19,10 @@ class JeuVideoType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $jeu = $builder->getData();
+
+        $isEdit = $jeu && $jeu->getId();
+
         $builder
             ->add('titre')
             ->add('dateSortie', DateType::class, [
@@ -31,6 +35,7 @@ class JeuVideoType extends AbstractType
             ->add('description')
             ->add('imageUrl', FileType::class,[
                 'label' => 'Image',
+                'required' => !$isEdit,
                 'mapped' => false,
                 'help' => "Veuillez selectionner un type d'image valdie (JPEG,PNG)",
                 'constraints' => [

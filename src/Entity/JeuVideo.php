@@ -177,6 +177,8 @@ class JeuVideo
 
         return $this;
     }
+
+    #[ORM\PrePersist]
     #[ORM\PreUpdate]
     public function setUpdatedAtValue(): void
     {
