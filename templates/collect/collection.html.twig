@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{# Titre de la page #}
+{% block title %}Collection de {{ utilisateur.prenom }} {{ utilisateur.nom|default('') }}{% endblock %}
+
+{% block body %}
+
+    <h1 class="my-4">Collection de jeux de {{ utilisateur.prenom }} {{ utilisateur.nom|default('') }}</h1>
+
+    {# Boutons d'action en haut de page #}
+    <div class="mb-4">
+        {# La route app_collect_new_for_user est hypothétique, elle devrait accepter l'ID de l'utilisateur #}
+        <a href="{{ path('app_collect_new_for_user', {'id': utilisateur.id}) }}" class="btn btn-success me-2">
+            Ajouter un jeu
+        </a>
+        <a href="{{ path('app_collect_index') }}" class="btn btn-secondary">
+            Retour à la liste
+        </a>
+    </div>
+
+    <div class="row">
+        {% if collection is not empty %}
+            {% for collect in collection %}
+                {# Chaque jeu de la collection est affiché dans une carte #}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card shadow-sm h-100">
+
+                        {# Titre de la carte : Nom du jeu #}
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">{{ collect.jeuvideo.titre }}</h5>
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <dl class="row mb-3">
+                                <dt class="col-sm-5">Éditeur :</dt>
+                                <dd class="col-sm-7">{{ collect.jeuvideo.editeur.nom|default('N/A') }}</dd>
+
+                                <dt class="col-sm-5">Développeur :</dt>
+                                <dd class="col-sm-7">{{ collect.jeuvideo.developpeur.nom|default('N/A') }}</dd>
+
+                                <dt class="col-sm-5">Genre :</dt>
+                                <dd class="col-sm-7">{{ collect.jeuvideo.genre.nom|default('N/A') }}</dd>
+
+                                <dt class="col-sm-5">Date de Sortie :</dt>
+                                <dd class="col-sm-7">
+                                    {{ collect.jeuvideo.dateSortie ? collect.jeuvideo.dateSortie|date('d/m/Y') : 'N/A' }}
+                                </dd>
+                            </dl>
+
+                            <hr>
+
+                            {# Informations sur la Collection (Collect) #}
+                            <h6 class="card-subtitle mb-2 text-muted">Détails de la collection</h6>
+
+                            <dl class="row">
+                                <dt class="col-sm-5">Prix Neuf :</dt>
+                                <dd class="col-sm-7">
+                                    {{ collect.jeuvideo.prix|default('0.00')|number_format(2, ',', ' ') }} €
+                                </dd>
+
+                                <dt class="col-sm-5">Prix Acheté :</dt>
+                                <dd class="col-sm-7">
+                                    {% if collect.prixAchat is not null %}
+                                        {{ collect.prixAchat|number_format(2, ',', ' ') }} €
+                                    {% else %}
+                                        Non renseigné
+                                    {% endif %}
+                                </dd>
+
+                                <dt class="col-sm-5">Date d'Achat :</dt>
+                                <dd class="col-sm-7">
+                                    {{ collect.dateAchat ? collect.dateAchat|date('d/m/Y') : 'N/A' }}
+                                </dd>
+                            </dl>
+
+                            {# Calcul de l'économie (si les prix sont définis) #}
+                            {% set prix_neuf = collect.jeuvideo.prix|default(0)|float %}
+                            {% set prix_achete = collect.prixAchat|default(0) %}
+                            {% set economie = prix_neuf - prix_achete %}
+
+                            {% if prix_neuf > 0 and collect.prixAchat is not null %}
+                                <p class="alert alert-success mt-2 p-2">
+                                    **Économie réalisée :** {{ economie|number_format(2, ',', ' ') }} €
+                                </p>
+                            {% endif %}
+
+                            <hr>
+
+                            <p><strong>Statut :</strong> <span class="badge text-bg-info">{{ collect.statut.name|capitalize }}</span></p>
+
+                            {% if collect.commentaire is not empty %}
+                                <p class="mb-3"><strong>Commentaire :</strong> {{ collect.commentaire }}</p>
+                            {% endif %}
+
+                            {# Les boutons d'action #}
+                            <div class="mt-auto pt-3 border-top">
+                                <a href="{{ path('app_collect_edit', {'id': collect.id}) }}" class="btn btn-warning btn-sm">
+                                    Modifier
+                                </a>
+                                <form method="post" action="{{ path('app_collect_delete', {'id': collect.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce jeu de la collection ?');" class="d-inline">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ collect.id) }}">
+                                    <button class="btn btn-danger btn-sm">Supprimer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <p class="alert alert-info">Cette collection est vide. Voulez-vous <a href="{{ path('app_collect_new_for_user', {'id': utilisateur.id}) }}">ajouter un jeu</a> ?</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
