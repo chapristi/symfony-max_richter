@@ -1,0 +1,55 @@
+{# templates/collect/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Collect index{% endblock %}
+
+{% block body %}
+    <h1 class="my-4">Gestion des collections de jeux vidéo</h1>
+
+
+
+    <div class="row">
+        {% for utilisateur in utilisateurs %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card shadow-sm">
+
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <strong>[{{ utilisateur.pseudo }}] {{ utilisateur.prenom }} {{ utilisateur.nom|default('') }}</strong>
+                        </h5>
+                    </div>
+
+                    <div class="card-body">
+                        <p class="card-text">
+                            Email : {{ utilisateur.mail }}
+                        </p>
+
+                        {% set count = utilisateur.gameCount %}
+                        <p class="text-muted">
+                            {% if count <= 1 %}
+                                {{ count }} jeu dans la collection
+                            {% else %}
+                                {{ count }} jeux dans la collection
+                            {% endif %}
+                        </p>
+
+                        <hr>
+
+                        <a href="{{ path('app_collect_collection', {'user_id': utilisateur.id}) }}" class="btn btn-primary btn-sm">
+                            Voir les jeux
+                        </a>
+
+                        <a href="{{ path('app_collect_new', {'id': utilisateur.id}) }}" class="btn btn-success me-2">
+                            Ajouter un jeu
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <p class="alert alert-info">Aucun utilisateur ou collection trouvée.</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

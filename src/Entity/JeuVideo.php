@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\JeuVideoRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -46,10 +48,17 @@ class JeuVideo
     #[ORM\ManyToOne(inversedBy: 'jeuVideos')]
     private ?Developpeur $developpeur = null;
 
+    /**
+     * @var Collection<int, Collect>
+     */
+    #[ORM\OneToMany(targetEntity: Collect::class, mappedBy: 'jeuvideo')]
+    private Collection $collects;
+
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->collects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -183,5 +192,35 @@ class JeuVideo
     public function setUpdatedAtValue(): void
     {
         $this->updatedAt = new \DateTimeImmutable();
+    }
+
+    /**
+     * @return Collection<int, Collect>
+     */
+    public function getCollects(): Collection
+    {
+        return $this->collects;
+    }
+
+    public function addCollect(Collect $collect): static
+    {
+        if (!$this->collects->contains($collect)) {
+            $this->collects->add($collect);
+            $collect->setJeuvideo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCollect(Collect $collect): static
+    {
+        if ($this->collects->removeElement($collect)) {
+            // set the owning side to null (unless already changed)
+            if ($collect->getJeuvideo() === $this) {
+                $collect->setJeuvideo(null);
+            }
+        }
+
+        return $this;
     }
 }

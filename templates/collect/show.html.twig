@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la collection | {{ collect.jeuvideo.titre }}{% endblock %}
+
+{% block body %}
+
+    <h1 class="my-4">
+        {{ collect.jeuvideo.titre }} (Collection de {{ collect.utilisateur.prenom }} {{ collect.utilisateur.nom|default('') }})
+    </h1>
+
+    <div class="mb-4">
+        <a href="{{ path('app_collect_collection', {'user_id': collect.utilisateur.id}) }}" class="btn btn-secondary me-2">
+            Retour à la collection
+        </a>
+        <a href="{{ path('app_collect_edit', {'id': collect.id}) }}" class="btn btn-warning me-2">
+            Modifier cet enregistrement
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+            <div class="card shadow h-100">
+
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">{{ collect.jeuvideo.titre }}</h5>
+                </div>
+
+                <div class="card-body">
+                    <h2 class="h5 mb-3">Informations sur le jeu</h2>
+                    <dl class="row mb-4">
+                        <dt class="col-sm-4">Éditeur :</dt>
+                        <dd class="col-sm-8">{{ collect.jeuvideo.editeur.nom|default('N/A') }}</dd>
+
+                        <dt class="col-sm-4">Développeur :</dt>
+                        <dd class="col-sm-8">{{ collect.jeuvideo.developpeur.nom|default('N/A') }}</dd>
+
+                        <dt class="col-sm-4">Genre :</dt>
+                        <dd class="col-sm-8">{{ collect.jeuvideo.genre.nom|default('N/A') }}</dd>
+
+                        <dt class="col-sm-4">Date de Sortie :</dt>
+                        <dd class="col-sm-8">
+                            {{ collect.jeuvideo.dateSortie ? collect.jeuvideo.dateSortie|date('d/m/Y') : 'N/A' }}
+                        </dd>
+
+                        <dt class="col-sm-4">Prix Neuf :</dt>
+                        <dd class="col-sm-8">{{ collect.jeuvideo.prix|default('0.00')|number_format(2, ',', ' ') }} €</dd>
+                    </dl>
+
+                    <h2 class="h5 mb-3">Détails de la Collection</h2>
+                    <dl class="row">
+                        <dt class="col-sm-4">Statut :</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge text-bg-info">{{ collect.statut.name|capitalize }}</span>
+                        </dd>
+
+                        <dt class="col-sm-4">Prix Acheté :</dt>
+                        <dd class="col-sm-8">
+                            {% if collect.prixAchat is not null %}
+                                **{{ collect.prixAchat|number_format(2, ',', ' ') }} €**
+                            {% else %}
+                                Non renseigné
+                            {% endif %}
+                        </dd>
+
+                        <dt class="col-sm-4">Date d'Achat :</dt>
+                        <dd class="col-sm-8">
+                            {{ collect.dateAchat ? collect.dateAchat|date('d/m/Y') : 'N/A' }}
+                        </dd>
+
+                        {% set prix_neuf = collect.jeuvideo.prix|default(0) * 1 %}
+                        {% set prix_achete = collect.prixAchat|default(0) * 1 %}
+                        {% set economie = prix_neuf - prix_achete %}
+
+                        {% if prix_neuf > 0 and collect.prixAchat is not null %}
+                            <dt class="col-sm-4">Économie :</dt>
+                            <dd class="col-sm-8 alert alert-success p-2 mb-0">
+                                **{{ economie|number_format(2, ',', ' ') }} €**
+                            </dd>
+                        {% endif %}
+                    </dl>
+
+                    {% if collect.commentaire is not empty %}
+                        <h2 class="h5 mt-4 mb-2">Commentaire Personnel</h2>
+                        <p class="border p-3 bg-light">{{ collect.commentaire|nl2br }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
