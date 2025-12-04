@@ -18,6 +18,7 @@ final class JeuVideoController extends AbstractController
     #[Route(name: 'app_jeu_video_index', methods: ['GET'])]
     public function index(JeuVideoRepository $jeuVideoRepository): Response
     {
+
         return $this->render('jeu_video/index.html.twig', [
             'jeu_videos' => $jeuVideoRepository->findAll(),
         ]);

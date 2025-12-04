@@ -37,40 +37,16 @@ class CollectRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findOneCollectionItemByCollectAndUser(int $collectId, int $utilisateurId): ?Collect
+    public function findOneCollectionItemByCollectAndUser(int $collectId): ?Collect
     {
         return $this->createQueryBuilder('c')
-            ->select('c', 'j')
+            ->select('c', 'j', 'u')
             ->join('c.jeuvideo', 'j')
+            ->join('c.utilisateur', 'u')
             ->andWhere('c.id = :collect_id')
             ->setParameter('collect_id', $collectId)
-            ->andWhere('c.utilisateur = :user_id')
-            ->setParameter('user_id', $utilisateurId)
             ->getQuery()
             ->getOneOrNullResult();
     }
-    //    /**
-    //     * @return Collect[] Returns an array of Collect objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
 
-    //    public function findOneBySomeField($value): ?Collect
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }

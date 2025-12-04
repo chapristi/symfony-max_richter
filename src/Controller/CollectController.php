@@ -36,11 +36,10 @@ final class CollectController extends AbstractController
         ]);
     }
 
-    #[Route('/utilisateur/{user_id}/collection/{collect_id}', name: 'app_collect_show_by_ids', methods: ['GET'])]
-    public function show(int $user_id,
-                         int $collect_id, CollectRepository $collect): Response
+    #[Route('/utilisateur/collection/{collect_id}', name: 'app_collect_show_by_ids', methods: ['GET'])]
+    public function show(int $collect_id, CollectRepository $collect): Response
     {
-        $collect = $collect->findOneCollectionItemByCollectAndUser($collect_id, $user_id);
+        $collect = $collect->findOneCollectionItemByCollectAndUser($collect_id);
         return $this->render('collect/show.html.twig', [
             'collect' => $collect,
         ]);

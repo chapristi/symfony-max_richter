@@ -15,29 +15,21 @@ class JeuVideoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, JeuVideo::class);
     }
+    public function findAllWithOwners(): array
+    {
+        return $this->createQueryBuilder('j')
+            ->select('j', 'g', 'e', 'd', 'c', 'u')
 
-    //    /**
-    //     * @return JeuVideo[] Returns an array of JeuVideo objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('j')
-    //            ->andWhere('j.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('j.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+            ->leftJoin('j.genre', 'g')
+            ->leftJoin('j.editeur', 'e')
+            ->leftJoin('j.developpeur', 'd')
 
-    //    public function findOneBySomeField($value): ?JeuVideo
-    //    {
-    //        return $this->createQueryBuilder('j')
-    //            ->andWhere('j.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+            ->leftJoin('j.collects', 'c')
+            ->leftJoin('c.utilisateur', 'u')
+
+            ->getQuery()
+            ->getResult();
+    }
+
+
 }

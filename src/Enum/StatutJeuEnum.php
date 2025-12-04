@@ -23,7 +23,7 @@ enum StatutJeuEnum: string
             self::ABANDONNE  => 'Abandonné',
             self::PRETE      => 'Prêté',
             self::VENDU      => 'Vendu',
-            self::PLATINE    => 'Platiné',
+            self::PLATINE    => 'Platine',
         };
     }
 }

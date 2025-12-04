@@ -3,52 +3,71 @@
 {% block title %}JeuVideo index{% endblock %}
 {% block body %}
 
-    <h1>JeuVideo index</h1>
+    <h1>Catalogue des jeux vidéo</h1>
 
-    <table class="table">
+    <table class="table table-hover align-middle">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>Image</th>
-                <th>Titre</th>
-                <th>DateSortie</th>
-                <th>Prix</th>
-                <th>Description</th>
-                <th>Editeur</th>
-                <th>Genre</th>
-                {# <th>ImageUrl</th> #}
-                {# <th>CreatedAt</th>#}
-               {# <th>UpdatedAt</th>#}
-                <th>actions</th>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <th>Image</th>
+            <th>Titre</th>
+            <th>DateSortie</th>
+            <th>Prix</th>
+            <th>Editeur</th>
+            <th>Genre</th>
+            {# NOUVELLE COLONNE #}
+            <th>Propriétaires</th>
+            <th>actions</th>
+        </tr>
         </thead>
         <tbody>
         {% for jeu_video in jeu_videos %}
             <tr>
                 <td>{{ jeu_video.id }}</td>
-                <td><img alt="image" src="{{ asset('' ~ jeu_video.imageUrl) }}" /></td>
+                <td class="text-center" style="max-width: 80px;">
+                    {# Assurez-vous que le chemin d'image est correct #}
+                    <img alt="Couverture du jeu" src="{{ asset('' ~ jeu_video.imageUrl) }}" class="img-fluid rounded" style="max-height: 50px;" />
+                </td>
                 <td>{{ jeu_video.titre }}</td>
                 <td>{{ jeu_video.dateSortie ? jeu_video.dateSortie|date('d/m/Y') : '' }}</td>
-                <td>{{ jeu_video.prix|number_format(2,',') }} €</td>
-                <td>{{ jeu_video.description }}</td>
+                <td>{{ jeu_video.prix|number_format(2,',', ' ') }} €</td>
                 <td>{{ jeu_video.editeur.nom }}</td>
                 <td>{{ jeu_video.genre.nom }}</td>
 
-                {# <td>{{ jeu_video.imageUrl }}</td> #}
-    {#  <td>{{ jeu_video.createdAt ? jeu_video.createdAt|date('Y-m-d H:i:s') : '' }}</td> #}
-    {#    <td>{{ jeu_video.updatedAt ? jeu_video.updatedAt|date('Y-m-d H:i:s') : '' }}</td>#}
+                {# NOUVEAU CONTENU : Affichage des propriétaires #}
                 <td>
-                    <a href="{{ path('app_jeu_video_show', {'id': jeu_video.id}) }}">Consulter</a>
-                    <a href="{{ path('app_jeu_video_edit', {'id': jeu_video.id}) }}">Modifier</a>
+                    {% if jeu_video.collects is not empty %}
+                        {% set proprietaires = [] %}
+
+                        {# Itérer sur la collection d'enregistrements (Collect) pour extraire les pseudos #}
+                        {% for collect in jeu_video.collects %}
+                            {% if collect.utilisateur %}
+                                {% set proprietaires = proprietaires|merge([collect.utilisateur.pseudo]) %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {# Afficher la liste des pseudos séparés par des virgules #}
+                        <span class="badge text-bg-success">{{ jeu_video.collects|length }}</span> :
+                        {{ proprietaires|join(', ') }}
+
+                    {% else %}
+                        <span class="text-muted">Aucun</span>
+                    {% endif %}
+                </td>
+
+                {# Colonne des actions #}
+                <td>
+                    <a href="{{ path('app_jeu_video_show', {'id': jeu_video.id}) }}" class="btn btn-info btn-sm">Consulter</a>
+                    <a href="{{ path('app_jeu_video_edit', {'id': jeu_video.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="9">no records found</td>
+                <td colspan="9">Aucun enregistrement trouvé.</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_jeu_video_new') }}">Create new</a>
+    <a href="{{ path('app_jeu_video_new') }}" class="btn btn-primary">Créer un nouveau jeu</a>
 {% endblock %}
