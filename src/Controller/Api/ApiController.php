@@ -8,7 +8,6 @@ use App\Repository\CollectRepository;
 use App\Repository\GenreRepository;
 use App\Repository\JeuVideoRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use http\Client\Response;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

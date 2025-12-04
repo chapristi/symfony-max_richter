@@ -162,9 +162,9 @@ class AppFixtures extends Fixture
         $devValve->setDescription('Studio américain créateur de Half-Life, Portal et Steam');
         $manager->persist($devValve);
 
-        // ========== JEUX VIDÉO ==========
+        // ========== JEUX VIDÉO AVEC DESCRIPTION ET IMAGE ==========
 
-        // Action
+// Action
         $jeuVideo1 = new JeuVideo();
         $jeuVideo1->setTitre('The Last of Us Part II');
         $jeuVideo1->setEditeur($editeurSony);
@@ -172,9 +172,11 @@ class AppFixtures extends Fixture
         $jeuVideo1->setGenre($genreAction);
         $jeuVideo1->setDateSortie(new \DateTime('2020-06-19'));
         $jeuVideo1->setPrix(59.99);
+        $jeuVideo1->setDescription("Cinq ans après leur périlleux voyage, Ellie et Joel se sont installés à Jackson. Un événement violent vient perturber la paix précaire.");
+        $jeuVideo1->setImageUrl('https://example.com/images/tlu2_cover.png');
         $manager->persist($jeuVideo1);
 
-        // RPG
+// RPG
         $jeuVideo2 = new JeuVideo();
         $jeuVideo2->setTitre('The Witcher 3: Wild Hunt');
         $jeuVideo2->setEditeur($editeurUbisoft);
@@ -182,9 +184,11 @@ class AppFixtures extends Fixture
         $jeuVideo2->setGenre($genreRPG);
         $jeuVideo2->setDateSortie(new \DateTime('2015-05-19'));
         $jeuVideo2->setPrix(39.99);
+        $jeuVideo2->setDescription("Incarnez Geralt de Riv, un tueur de monstres professionnel, et partez à la recherche de Ciri, l'enfant de la prophétie, dans un monde ouvert tentaculaire.");
+        $jeuVideo2->setImageUrl('https://example.com/images/witcher3_cover.png');
         $manager->persist($jeuVideo2);
 
-        // Stratégie
+// Stratégie
         $jeuVideo3 = new JeuVideo();
         $jeuVideo3->setTitre('Age of Empires IV');
         $jeuVideo3->setEditeur($editeurMicrosoft);
@@ -192,9 +196,11 @@ class AppFixtures extends Fixture
         $jeuVideo3->setGenre($genreStrategie);
         $jeuVideo3->setDateSortie(new \DateTime('2021-10-28'));
         $jeuVideo3->setPrix(49.99);
+        $jeuVideo3->setDescription("Le jeu de stratégie en temps réel légendaire fait son retour en vous mettant au centre d'épiques batailles historiques qui ont façonné le monde.");
+        $jeuVideo3->setImageUrl('https://example.com/images/aoe4_cover.png');
         $manager->persist($jeuVideo3);
 
-        // Simulation
+// Simulation
         $jeuVideo4 = new JeuVideo();
         $jeuVideo4->setTitre('Microsoft Flight Simulator');
         $jeuVideo4->setEditeur($editeurMicrosoft);
@@ -202,9 +208,11 @@ class AppFixtures extends Fixture
         $jeuVideo4->setGenre($genreSimulation);
         $jeuVideo4->setDateSortie(new \DateTime('2020-08-18'));
         $jeuVideo4->setPrix(69.99);
+        $jeuVideo4->setDescription("Volez aux quatre coins du globe, des avions légers aux gros porteurs, avec un niveau de détail incroyable dans un monde modélisé par satellite.");
+        $jeuVideo4->setImageUrl('https://example.com/images/mfs_cover.png');
         $manager->persist($jeuVideo4);
 
-        // Sport
+// Sport
         $jeuVideo5 = new JeuVideo();
         $jeuVideo5->setTitre('FIFA 24');
         $jeuVideo5->setEditeur($editeurEA);
@@ -212,9 +220,11 @@ class AppFixtures extends Fixture
         $jeuVideo5->setGenre($genreSport);
         $jeuVideo5->setDateSortie(new \DateTime('2023-09-29'));
         $jeuVideo5->setPrix(69.99);
+        $jeuVideo5->setDescription("Le jeu de football le plus réaliste du marché. Construisez votre équipe de rêve et affrontez le monde entier.");
+        $jeuVideo5->setImageUrl('https://example.com/images/fifa24_cover.png');
         $manager->persist($jeuVideo5);
 
-        // Course
+// Course
         $jeuVideo6 = new JeuVideo();
         $jeuVideo6->setTitre('Mario Kart 8 Deluxe');
         $jeuVideo6->setEditeur($editeurNintendo);
@@ -222,9 +232,11 @@ class AppFixtures extends Fixture
         $jeuVideo6->setGenre($genreCourse);
         $jeuVideo6->setDateSortie(new \DateTime('2017-04-28'));
         $jeuVideo6->setPrix(59.99);
+        $jeuVideo6->setDescription("L'expérience de course ultime avec tous les personnages et circuits de l'univers Mario. Batailles fun garanties.");
+        $jeuVideo6->setImageUrl('https://example.com/images/mk8_cover.png');
         $manager->persist($jeuVideo6);
 
-        // Réflexion
+// Réflexion
         $jeuVideo7 = new JeuVideo();
         $jeuVideo7->setTitre('Portal 2');
         $jeuVideo7->setEditeur($editeurEA);
@@ -232,6 +244,8 @@ class AppFixtures extends Fixture
         $jeuVideo7->setGenre($genreReflexion);
         $jeuVideo7->setDateSortie(new \DateTime('2011-04-19'));
         $jeuVideo7->setPrix(19.99);
+        $jeuVideo7->setDescription("Un jeu de réflexion à la première personne incroyablement drôle où vous utilisez un pistolet pour créer des portails.");
+        $jeuVideo7->setImageUrl('https://example.com/images/portal2_cover.png');
         $manager->persist($jeuVideo7);
 
         // Action-Aventure
@@ -242,6 +256,8 @@ class AppFixtures extends Fixture
         $jeuVideo8->setGenre($genreActionAventure);
         $jeuVideo8->setDateSortie(new \DateTime('2017-03-03'));
         $jeuVideo8->setPrix(59.99);
+        $jeuVideo8->setDescription("Explorez le vaste royaume d'Hyrule comme jamais auparavant. Un monde ouvert où vous décidez de l'aventure.");
+        $jeuVideo8->setImageUrl('https://example.com/images/botw_cover.png');
         $manager->persist($jeuVideo8);
 
 
