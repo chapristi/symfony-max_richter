@@ -55,7 +55,7 @@ final class EditeurController extends AbstractController
     {
         $form = $this->createForm(EditeurType::class, $editeur);
         $form->handleRequest($request);
-
+        $editeur->setUpdatedAt(new \DateTimeImmutable());
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 

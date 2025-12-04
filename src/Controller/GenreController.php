@@ -55,7 +55,7 @@ final class GenreController extends AbstractController
     {
         $form = $this->createForm(GenreType::class, $genre);
         $form->handleRequest($request);
-
+        $genre->setUpdatedAt(new \DateTimeImmutable());
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 

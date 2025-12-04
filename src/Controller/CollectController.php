@@ -80,10 +80,9 @@ final class CollectController extends AbstractController
     {
         $form = $this->createForm(CollectType::class, $collect);
         $form->handleRequest($request);
-
+        $collect->setUpdatedAt(new \DateTimeImmutable());
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
             return $this->redirectToRoute('app_collect_index', [], Response::HTTP_SEE_OTHER);
         }
 

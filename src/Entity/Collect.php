@@ -88,7 +88,7 @@ class Collect
     {
         $this->statut = $statut;
         $this->setUpdatedAt(new \DateTimeImmutable());
-
+        $this->setDateModifStatut(new \DateTimeImmutable());
         return $this;
     }
 

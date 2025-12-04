@@ -72,7 +72,7 @@ final class JeuVideoController extends AbstractController
     {
         $form = $this->createForm(JeuVideoType::class, $jeuVideo);
         $form->handleRequest($request);
-
+        $jeuVideo->setUpdatedAt(new \DateTimeImmutable());
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
