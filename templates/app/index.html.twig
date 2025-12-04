@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello DefaultController!{% endblock %}
+
+{% block body %}
+    <main class="container my-5">
+
+        <div class="p-5 mb-4 rounded-3 text-center shadow">
+            <div class="container-fluid py-5">
+                <h1 class="display-5 fw-bold">Bienvenue sur votre Espace Collectionneur</h1>
+
+                <p class="col-md-8 fs-4 mx-auto">
+                    Gérez, organisez et partagez votre passion pour les jeux vidéo. Votre collection vous attend.
+                </p>
+                <hr class="my-4">
+
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                    <a class="btn btn-primary btn-lg px-4 gap-3" href="/collection" role="button">
+                        <i class="fas fa-users me-2"></i> Voir les collectionneurs qui me ressemblent
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </main>
+{% endblock %}

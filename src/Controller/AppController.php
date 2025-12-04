@@ -7,12 +7,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 #[Route('/')]
 
-final class DefaultController extends AbstractController
+final class AppController extends AbstractController
 {
-    #[Route('/default', name: 'app_default')]
+    #[Route('/', name: 'app_default')]
     public function index(): Response
     {
-        return $this->render('default/index.html.twig', [
+        return $this->render('app/index.html.twig', [
             'controller_name' => 'DefaultController',
         ]);
     }

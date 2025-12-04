@@ -6,6 +6,7 @@ use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 class Utilisateur
@@ -14,13 +15,13 @@ class Utilisateur
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    #[Groups(['minimum'])]
     #[ORM\Column(length: 255)]
     private ?string $prenom = null;
-
+    #[Groups(['minimum'])]
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
-
+    #[Groups(['minimum'])]
     #[ORM\Column(length: 30, unique: true)]
     private ?string $pseudo = null;
 

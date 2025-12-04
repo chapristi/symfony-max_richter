@@ -7,28 +7,34 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: GenreRepository::class)]
 class Genre
 {
+    #[Groups(['titre:seul','genre:read'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['titre:seul','genre:read'])]
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $nom = null;
 
+    #[Groups(['genre:read'])]
     #[ORM\Column(type: Types::TEXT,nullable: true)]
     private ?string $description = null;
 
+    #[Groups(['genre:read'])]
     #[ORM\Column]
     private ?bool $actif = true;
-
+    #[Groups(['genre:read'])]
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['genre:read'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     /**

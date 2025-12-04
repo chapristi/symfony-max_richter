@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: DeveloppeurRepository::class)]
 class Developpeur
@@ -15,7 +16,7 @@ class Developpeur
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
+    #[Groups(['titre:seul'])]
     #[ORM\Column(length: 100)]
     private ?string $nom = null;
 
@@ -37,7 +38,7 @@ class Developpeur
     /**
      * @var Collection<int, JeuVideo>
      */
-    #[ORM\OneToMany(targetEntity: JeuVideo::class, mappedBy: 'idDeveloppeur')]
+    #[ORM\OneToMany(targetEntity: JeuVideo::class, mappedBy: 'developpeur')]
     private Collection $jeuVideos;
 
     public function __construct()
@@ -136,7 +137,7 @@ class Developpeur
     {
         if (!$this->jeuVideos->contains($jeuVideo)) {
             $this->jeuVideos->add($jeuVideo);
-            $jeuVideo->setIdDeveloppeur($this);
+            $jeuVideo->setDeveloppeur($this);
         }
 
         return $this;
@@ -145,9 +146,9 @@ class Developpeur
     public function removeJeuVideo(JeuVideo $jeuVideo): static
     {
         if ($this->jeuVideos->removeElement($jeuVideo)) {
-            // set the owning side to null (unless already changed)
-            if ($jeuVideo->getIdDeveloppeur() === $this) {
-                $jeuVideo->setIdDeveloppeur(null);
+
+            if ($jeuVideo->getDeveloppeur() === $this) {
+                $jeuVideo->setDeveloppeur(null);
             }
         }
 

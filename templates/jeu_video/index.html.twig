@@ -25,7 +25,6 @@
             <tr>
                 <td>{{ jeu_video.id }}</td>
                 <td class="text-center" style="max-width: 80px;">
-                    {# Assurez-vous que le chemin d'image est correct #}
                     <img alt="Couverture du jeu" src="{{ asset('' ~ jeu_video.imageUrl) }}" class="img-fluid rounded" style="max-height: 50px;" />
                 </td>
                 <td>{{ jeu_video.titre }}</td>
@@ -34,19 +33,16 @@
                 <td>{{ jeu_video.editeur.nom }}</td>
                 <td>{{ jeu_video.genre.nom }}</td>
 
-                {# NOUVEAU CONTENU : Affichage des propriétaires #}
                 <td>
                     {% if jeu_video.collects is not empty %}
                         {% set proprietaires = [] %}
 
-                        {# Itérer sur la collection d'enregistrements (Collect) pour extraire les pseudos #}
                         {% for collect in jeu_video.collects %}
                             {% if collect.utilisateur %}
                                 {% set proprietaires = proprietaires|merge([collect.utilisateur.pseudo]) %}
                             {% endif %}
                         {% endfor %}
 
-                        {# Afficher la liste des pseudos séparés par des virgules #}
                         <span class="badge text-bg-success">{{ jeu_video.collects|length }}</span> :
                         {{ proprietaires|join(', ') }}
 

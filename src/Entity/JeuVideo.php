@@ -7,44 +7,47 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: JeuVideoRepository::class)]
 class JeuVideo
 {
+    #[Groups(['jv:read'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['jv:read','minimum'])]
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
-
+    #[Groups(['jv:read'])]
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTime $dateSortie = null;
-
+    #[Groups(['jv:read'])]
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2, nullable: true)]
     private ?string $prix = null;
-
+    #[Groups(['jv:read'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
-
+    #[Groups(['jv:read'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imageUrl = null;
-
+    #[Groups(['jv:read'])]
     #[ORM\ManyToOne(inversedBy: 'jeuVideos')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Editeur $editeur = null;
-
+    #[Groups(['jv:read'])]
     #[ORM\ManyToOne(inversedBy: 'jeuVideos')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Genre $genre = null;
-
+    #[Groups(['jv:read'])]
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
-
+    #[Groups(['jv:read'])]
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
-
+    #[Groups(['jv:read'])]
     #[ORM\ManyToOne(inversedBy: 'jeuVideos')]
     private ?Developpeur $developpeur = null;
 
