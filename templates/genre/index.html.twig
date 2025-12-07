@@ -3,37 +3,74 @@
 {% block title %}Genre index{% endblock %}
 
 {% block body %}
-    <h1>Genre index</h1>
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h5 mb-0 fw-bold text-dark">Genre Index</h1>
+                <small class="text-muted">Gérez vos catégories de jeux</small>
+            </div>
+            <a href="{{ path('app_genre_new') }}" class="btn btn-primary btn-sm rounded-pill px-3">
+                <i class="bi bi-plus-lg me-1"></i> Create New
+            </a>
+        </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Description</th>
-                <th>Actif</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for genre in genres %}
-            <tr>
-                <td>{{ genre.id }}</td>
-                <td>{{ genre.nom }}</td>
-                <td>{{ genre.description }}</td>
-                <td>{{ genre.actif ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('app_genre_show', {'id': genre.id}) }}">show</a>
-                    <a href="{{ path('app_genre_edit', {'id': genre.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0 align-middle">
+                    <thead class="bg-light">
+                        <tr>
+                            <th scope="col" class="ps-4 text-uppercase text-muted small fw-bold" style="width: 50px;">Id</th>
+                            <th scope="col" class="text-uppercase text-muted small fw-bold">Nom</th>
+                            <th scope="col" class="text-uppercase text-muted small fw-bold">Description</th>
+                            <th scope="col" class="text-uppercase text-muted small fw-bold text-center" style="width: 100px;">Actif</th>
+                            <th scope="col" class="text-uppercase text-muted small fw-bold text-end pe-4" style="width: 150px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for genre in genres %}
+                        <tr>
+                            <td class="ps-4 text-muted fw-bold">#{{ genre.id }}</td>
+                            <td class="fw-medium text-dark">{{ genre.nom }}</td>
+                            <td class="text-secondary small">
+                                {{ genre.description|length > 50 ? genre.description|slice(0, 50) ~ '...' : genre.description }}
+                            </td>
+                            <td class="text-center">
+                                {% if genre.actif %}
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">
+                                        Active
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill">
+                                        Inactive
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="btn-group" role="group">
+                                    <a href="{{ path('app_genre_show', {'id': genre.id}) }}" class="btn btn-sm btn-outline-secondary" title="Voir">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{{ path('app_genre_edit', {'id': genre.id}) }}" class="btn btn-sm btn-outline-primary" title="Éditer">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <div class="mb-2"><i class="bi bi-inbox fs-1"></i></div>
+                                <span>Aucun enregistrement trouvé</span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    <a href="{{ path('app_genre_new') }}">Create new</a>
+        <div class="card-footer bg-white py-2">
+            <small class="text-muted">Total: {{ genres|length }} genres</small>
+        </div>
+    </div>
 {% endblock %}

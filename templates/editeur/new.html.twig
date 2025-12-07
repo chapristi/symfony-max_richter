@@ -1,11 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Editeur{% endblock %}
+{% block title %}Nouvel Éditeur{% endblock %}
 
 {% block body %}
-    <h1>Creer un nouvel Editeur</h1>
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                
+                {# Header Section #}
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="h3 text-dark mb-0">Créer un nouvel Éditeur</h1>
+                    <a href="{{ path('app_editeur_index') }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-arrow-left"></i> Retour à la liste
+                    </a>
+                </div>
 
-    {{ include('editeur/_form.html.twig') }}
+                {# Card Component for the Form #}
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-4">
+                        <p class="text-muted small mb-4">Remplissez les informations pour ajouter un nouvel éditeur.</p>
+                        
+                        {# Rendering the form #}
+                        {{ include('editeur/_form.html.twig', {'button_label': 'Créer l\'éditeur'}) }}
+                    </div>
+                </div>
 
-    <a href="{{ path('app_editeur_index') }}">back to list</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

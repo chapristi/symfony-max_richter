@@ -1,0 +1,305 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{float}
+
+% Configuration de la page
+\geometry{hmargin=2.5cm,vmargin=2.5cm}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Azário COSSA \& Louis BEC}
+\lhead{Rapport de Projet Web}
+\cfoot{\thepage}
+
+% Configuration du code
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstset{
+  backgroundcolor=\color{backcolour},
+  frame=single,
+  language=PHP,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4,
+  captionpos=b
+}
+
+\title{
+    \vspace{2cm}
+    \textbf{\Huge Gestionnaire de Collection de Jeux Vidéo}\\
+    \vspace{0.5cm}
+    \Large Rapport de Projet\\
+    \vspace{2cm}
+}
+\author{\textbf{Azário COSSA} \and \textbf{Louis BEC}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+Dans le cadre de notre formation, nous avons réalisé une application web dynamique permettant la gestion complète d'une collection de jeux vidéo. Ce projet, mené en binôme par \textbf{Azário COSSA} et \textbf{Louis BEC}, avait pour but de mettre en pratique les concepts de développement web avancés enseignés en cours.
+
+L'application se veut être un outil centralisé pour les passionnés de jeux vidéo, leur offrant la possibilité de cataloguer leurs titres favoris, de gérer les informations associées (éditeurs, développeurs, genres) et de visualiser leur collection de manière intuitive. Ce rapport se concentre sur les choix de conception fonctionnelle, l'expérience utilisateur (UX/UI) et les détails d'implémentation des fonctionnalités clés.
+
+\section{Expérience Utilisateur et Interface (UX/UI)}
+
+L'interface utilisateur a été conçue pour être à la fois esthétique et fonctionnelle, garantissant une prise en main rapide pour l'utilisateur final.
+
+\subsection{Choix du Framework CSS : Bootstrap 5}
+Pour assurer un design réactif (responsive) et moderne, nous avons intégré \textbf{Bootstrap 5}. Ce choix nous a permis de :
+\begin{itemize}
+    \item \textbf{Uniformiser les composants} : Utilisation de classes standardisées pour les boutons, les cartes (Cards) et les alertes.
+    \item \textbf{Grille Responsive} : Mise en page fluide s'adaptant aux écrans d'ordinateurs, tablettes et mobiles.
+    \item \textbf{Formulaires} : Stylisation automatique des champs de saisie pour une meilleure lisibilité.
+\end{itemize}
+
+\subsection{Identité Visuelle et Icônes}
+Nous avons opté pour un thème sombre (\texttt{navbar-dark bg-dark}) pour la navigation, rappelant les interfaces de plateformes de jeux populaires (comme Steam ou Epic Games).
+L'utilisation de la bibliothèque \textbf{Bootstrap Icons} et \textbf{FontAwesome} (via CDN) enrichit l'interface avec des visuels intuitifs (icônes pour les réseaux sociaux dans le footer, indicateurs d'actions).
+
+\subsection{Structure de Navigation (Menu Builder)}
+La navigation est un élément central de l'expérience utilisateur. Pour la gérer dynamiquement, nous avons implémenté un constructeur de menu robuste (basé sur \texttt{KnpMenuBundle}).
+
+Ce système nous permet de générer une barre de navigation hiérarchique et maintenable :
+\begin{itemize}
+    \item \textbf{Menus Déroulants (Dropdowns)} : Pour éviter d'encombrer la barre principale, nous avons regroupé les actions par entité :
+    \begin{itemize}
+        \item \textbf{Jeux Vidéo} : Liste complète, Ajout d'un nouveau jeu.
+        \item \textbf{Genres} : Gestion des catégories (Action, RPG, etc.).
+        \item \textbf{Éditeurs} : Gestion des sociétés d'édition.
+        \item \textbf{Collection} : Accès aux collections personnelles.
+    \end{itemize}
+    \item \textbf{Mise en surbrillance active} : Le menu détecte automatiquement la page courante pour indiquer à l'utilisateur où il se trouve.
+\end{itemize}
+
+\section{Fonctionnalités Détaillées de l'Application}
+
+L'application s'articule autour de plusieurs modules interconnectés, offrant une gestion fine des données.
+
+\subsection{Gestion des Jeux Vidéo (Cœur du Système)}
+Le module principal concerne la gestion des fiches de jeux vidéo.
+
+\subsubsection{Consultation (Liste et Détails)}
+La page d'accueil des jeux présente une liste exhaustive des titres enregistrés. Chaque entrée permet d'accéder à une vue détaillée affichant :
+\begin{itemize}
+    \item Le titre et la jaquette du jeu.
+    \item Le prix et la date de sortie.
+    \item La description complète.
+    \item Les entités liées : Éditeur, Développeur et Genre.
+\end{itemize}
+
+Pour mettre en valeur les visuels des jeux, nous avons abandonné l'affichage classique en tableau au profit d'une \textbf{vue en Grille (Grid Layout)}. Chaque jeu est présenté sous forme de "Carte" (Card Bootstrap) :
+\begin{itemize}
+    \item \textbf{Affichage Conditionnel} : Si une image est associée au jeu, elle est affichée en couverture.
+    \item \textbf{Fallback} : Si aucune image n'est disponible, une icône générique est affichée automatiquement pour conserver l'harmonie visuelle.
+    \item \textbf{Carousel} : En haut de page, un carousel met en avant les 5 derniers jeux ajoutés avec un effet de flou en arrière-plan.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=\textwidth]{screenshots/liste_jeux.png}
+    \fbox{\begin{minipage}{\textwidth}
+        \vspace{5cm}
+        \centering
+        \textbf{PLACEHOLDER : Capture d'écran de la liste des jeux}
+        \vspace{5cm}
+    \end{minipage}}
+    \caption{Interface de consultation de la liste des jeux vidéo}
+    \label{fig:liste_jeux}
+\end{figure}
+
+\subsubsection{Création et Édition (Formulaires Intelligents)}
+Les formulaires de création et d'édition ont été conçus pour guider l'utilisateur :
+\begin{itemize}
+    \item \textbf{Listes de Sélection Dynamiques} : Pour les champs Éditeur, Genre et Développeur, l'application propose des listes déroulantes (<select>) peuplées automatiquement depuis la base de données. Cela évite les erreurs de saisie et garantit la cohérence des données.
+    \item \textbf{Validation des Données} : Des règles strictes sont appliquées (champs obligatoires, format de date, prix numérique positif) pour assurer la qualité de la base de données.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=\textwidth]{screenshots/formulaire_creation.png}
+    \fbox{\begin{minipage}{\textwidth}
+        \vspace{5cm}
+        \centering
+        \textbf{PLACEHOLDER : Capture d'écran du formulaire de création}
+        \vspace{5cm}
+    \end{minipage}}
+    \caption{Formulaire de création d'un jeu vidéo avec listes déroulantes}
+    \label{fig:formulaire_creation}
+\end{figure}
+
+\subsubsection{Système d'Upload d'Images}
+Une fonctionnalité clé est la possibilité d'associer une image (jaquette) à chaque jeu. Nous avons développé un système d'upload sécurisé :
+\begin{itemize}
+    \item \textbf{Traitement du Fichier} : L'image n'est pas stockée directement en base de données (ce qui serait lourd), mais sur le serveur de fichiers dans le dossier \texttt{public/assets/uploads}.
+    \item \textbf{Renommage Unique} : Pour éviter que deux images portant le même nom ne s'écrasent (par exemple \texttt{cover.jpg}), le système génère automatiquement un nom de fichier unique lors de l'upload (basé sur le titre du jeu et un identifiant unique).
+    \item \textbf{Sécurité} : Le système vérifie le type MIME du fichier (JPG, PNG uniquement) et sa taille maximale (1Mo) avant d'accepter l'envoi.
+\end{itemize}
+
+\subsection{Gestion des Entités Associées}
+Pour offrir une base de données riche, l'application permet de gérer indépendamment les entités liées aux jeux.
+\begin{itemize}
+    \item \textbf{Genres} : L'utilisateur peut créer de nouveaux genres (FPS, Aventure, Stratégie) qui seront ensuite disponibles lors de la création d'un jeu.
+    \item \textbf{Éditeurs et Développeurs} : De la même manière, il est possible d'enrichir la base des acteurs de l'industrie (Nintendo, Ubisoft, etc.).
+\end{itemize}
+Cette architecture modulaire permet une grande flexibilité : si un éditeur change de nom ou si un nouveau genre apparaît, il suffit de le mettre à jour à un seul endroit pour que cela se répercute sur tous les jeux associés.
+
+
+\subsection{Gestion des Collections (Collect)}
+Au-delà de la simple base de données encyclopédique, l'application intègre une notion de "Collection". Cette fonctionnalité permet de lier des jeux à des utilisateurs ou des listes spécifiques, transformant l'application en un véritable outil de gestion de bibliothèque personnelle.
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=\textwidth]{screenshots/ma_collection.png}
+    \fbox{\begin{minipage}{\textwidth}
+        \vspace{5cm}
+        \centering
+        \textbf{PLACEHOLDER : Capture d'écran de la collection utilisateur}
+        \vspace{5cm}
+    \end{minipage}}
+    \caption{Vue de la collection personnelle d'un utilisateur}
+    \label{fig:ma_collection}
+\end{figure}
+
+\subsection{Journalisation et Suivi (Logs)}
+Pour assurer la maintenabilité et le débogage de l'application, nous avons mis en place un système de journalisation (logging) personnalisé.
+\begin{itemize}
+    \item \textbf{Monolog} : Nous utilisons la bibliothèque standard Monolog pour gérer les flux de logs. En environnement de développement, les logs sont écrits dans \texttt{var/log/dev.log}.
+    \item \textbf{Subscriber Personnalisé} : Nous avons développé un \texttt{RequestLoggerSubscriber} qui écoute l'événement \texttt{kernel.controller}. À chaque requête HTTP, ce subscriber intercepte l'appel et enregistre automatiquement :
+    \begin{itemize}
+        \item La méthode HTTP (GET, POST...) et l'URL appelée.
+        \item Le nom du contrôleur et de la méthode exécutée.
+        \item L'adresse IP du client.
+    \end{itemize}
+\end{itemize}
+Cette traçabilité permet de suivre l'activité de l'application et d'identifier rapidement les actions effectuées par les utilisateurs ou les erreurs potentielles.
+
+
+\section{Architecture de Données et Infrastructure}
+
+Une application robuste repose sur une base de données bien structurée et un environnement de développement fiable.
+
+\subsection{Infrastructure Conteneurisée (Docker)}
+Pour garantir la portabilité du projet et faciliter le déploiement, nous avons utilisé \textbf{Docker}. Le fichier \texttt{docker-compose.yml} orchestre deux services essentiels :
+
+\begin{itemize}
+    \item \textbf{Base de Données (MySQL 8.0)} : Le conteneur \texttt{db} héberge les données. Nous avons configuré un volume persistant (\texttt{db\_data}) pour ne pas perdre les données lors du redémarrage des conteneurs.
+    \item \textbf{Administration (PhpMyAdmin)} : Le conteneur \texttt{phpmyadmin} offre une interface web pour visualiser et manipuler la base de données directement depuis le navigateur (accessible via le port 8080).
+\end{itemize}
+
+Cette approche permet à n'importe quel développeur de lancer le projet sans avoir à installer manuellement MySQL sur sa machine.
+
+\subsection{Schéma de Base de Données (Migrations)}
+La structure de la base de données est gérée par les \textbf{Migrations Doctrine}. Cela nous permet de versionner l'état de la base de données.
+L'analyse des fichiers de migration (notamment \texttt{Version20251203084647.php}) révèle la structure relationnelle suivante :
+
+\begin{itemize}
+    \item \textbf{Tables Principales} :
+    \begin{itemize}
+        \item \texttt{jeu\_video} : Contient les informations des jeux.
+        \item \texttt{utilisateur} : Stocke les profils des membres (Nom, Prénom, Pseudo, Email).
+        \item \texttt{collect} : Table de liaison enrichie représentant la possession d'un jeu par un utilisateur.
+    \end{itemize}
+    \item \textbf{Relations (Clés Étrangères)} :
+    \begin{itemize}
+        \item La table \texttt{collect} est liée à \texttt{utilisateur} (\texttt{utilisateur\_id}) et à \texttt{jeu\_video} (\texttt{jeuvideo\_id}).
+        \item Des contraintes d'intégrité (Foreign Keys) assurent qu'on ne peut pas supprimer un utilisateur s'il possède des jeux dans sa collection sans gérer la cascade.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Jeu de Données de Test (Fixtures)}
+Pour tester l'application dans des conditions réelles, nous avons créé un jeu de données complet via les \textbf{Fixtures} (\texttt{AppFixtures.php}).
+Au lancement, le script peuple la base avec :
+\begin{itemize}
+    \item \textbf{Genres} : Action, RPG, Stratégie, etc.
+    \item \textbf{Éditeurs & Développeurs} : Sony, Nintendo, Ubisoft, Naughty Dog, etc.
+    \item \textbf{Jeux Vidéo} : Des titres phares comme \textit{The Last of Us Part II}, \textit{The Witcher 3}, ou \textit{Mario Kart 8 Deluxe}, avec des descriptions réalistes et des images de couverture.
+    \item \textbf{Utilisateurs & Collections} : Des profils fictifs (Alice, Benoît...) possédant des jeux avec différents statuts (Possédé, Souhaité, Terminé) et des commentaires personnalisés.
+\end{itemize}
+
+\section{Scénarios d'Utilisation}
+
+Pour illustrer le fonctionnement de l'application, voici le parcours typique d'un utilisateur souhaitant ajouter un nouveau jeu à sa collection.
+
+\begin{enumerate}
+    \item \textbf{Prérequis} : L'utilisateur vérifie d'abord si l'éditeur et le genre du jeu existent. Si ce n'est pas le cas, il navigue via le menu vers "Éditeurs > Création" pour ajouter l'entité manquante.
+    \item \textbf{Création de la Fiche} : Il se rend sur "Jeux Vidéo > Création d'un jeu".
+    \item \textbf{Saisie} : Il remplit le titre, le prix, la date de sortie et la description. Il sélectionne l'éditeur et le genre dans les listes.
+    \item \textbf{Upload} : Il clique sur "Parcourir" pour sélectionner l'image de la jaquette sur son ordinateur.
+    \item \textbf{Validation} : En cliquant sur "Enregistrer", le système valide les données, télécharge l'image, la renomme, crée l'enregistrement en base de données et redirige l'utilisateur vers la liste des jeux avec un message de confirmation.
+\end{enumerate}
+
+\section{Conclusion}
+Ce projet nous a permis de construire une application web complète, allant de la modélisation des données à l'interface utilisateur finale. En nous concentrant sur l'expérience utilisateur via Bootstrap et une navigation fluide, et en implémentant des fonctionnalités robustes comme l'upload de fichiers et la gestion des relations, nous avons répondu aux exigences d'un gestionnaire de collection moderne.
+Le travail en binôme a favorisé une répartition efficace des tâches, notamment entre la gestion du backend (logique métier) et l'intégration du frontend (design et ergonomie).
+
+\newpage
+\appendix
+\section{Guide de Démarrage Base de Données}
+
+Pour initialiser le projet et la base de données sur une nouvelle machine, suivez ces instructions :
+
+\subsection*{1. Lancement des Conteneurs}
+Assurez-vous que Docker Desktop est lancé, puis exécutez à la racine du projet :
+\begin{lstlisting}[language=bash]
+docker-compose up -d
+\end{lstlisting}
+Cette commande télécharge les images MySQL et PhpMyAdmin et lance les conteneurs en arrière-plan.
+
+\subsection*{2. Création de la Base de Données}
+Une fois les conteneurs actifs, créez la base de données via la console Symfony :
+\begin{lstlisting}[language=bash]
+php bin/console doctrine:database:create
+\end{lstlisting}
+
+\subsection*{3. Exécution des Migrations}
+Pour créer les tables (structure) :
+\begin{lstlisting}[language=bash]
+php bin/console doctrine:migrations:migrate
+\end{lstlisting}
+Validez par "yes" si demandé.
+
+\subsection*{4. Chargement des Données (Fixtures)}
+Pour remplir la base avec les données de test (Jeux, Utilisateurs...) :
+\begin{lstlisting}[language=bash]
+php bin/console doctrine:fixtures:load
+\end{lstlisting}
+\textbf{Attention} : Cette commande purge les données existantes.
+
+\subsection*{5. Vérification}
+Accédez à PhpMyAdmin pour vérifier les données :
+\begin{itemize}
+    \item \textbf{URL} : \texttt{http://localhost:8080}
+    \item \textbf{Serveur} : \texttt{db}
+    \item \textbf{Utilisateur} : \texttt{root}
+    \item \textbf{Mot de passe} : \texttt{rootpassword} (défini dans le docker-compose.yml)
+\end{itemize}
+
+\end{document}

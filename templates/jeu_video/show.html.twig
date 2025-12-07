@@ -1,55 +1,102 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}JeuVideo{% endblock %}
+{% block title %}Détails - {{ jeu_video.titre }}{% endblock %}
 
 {% block body %}
-    <h1>JeuVideo</h1>
+    <div class="container py-4">
+        {# Navegação Superior #}
+        <div class="mb-4">
+            <a href="{{ path('app_jeu_video_index') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                <i class="bi bi-arrow-left me-1"></i> Retour au catalogue
+            </a>
+        </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ jeu_video.id }}</td>
-            </tr>
-            <tr>
-                <th>Titre</th>
-                <td>{{ jeu_video.titre }}</td>
-            </tr>
-            <tr>
-                <th>DateSortie</th>
-                <td>{{ jeu_video.dateSortie ? jeu_video.dateSortie|date('d-m-Y  ') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Prix</th>
-                <td>{{ jeu_video.prix|number_format(2,",")}}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ jeu_video.description }}</td>
-            </tr>
-            <tr>
-                <th>Date de creation </th>
-                <td>{{  jeu_video.createdAt ? jeu_video.createdAt | date('d-m-Y h:m')  : ''  }}</td>
-            </tr>
-            <tr>
-                <th>Date de modification </th>
-                <td>{{ jeu_video.updatedAt ? jeu_video.updatedAt | date('d-m-Y h:m') : '' }}</td>
-            </tr>
+        <div class="card shadow border-0 overflow-hidden">
+            <div class="row g-0">
+                
+                {# --- COLUNA DA IMAGEM --- #}
+                <div class="col-md-5 col-lg-4 bg-light position-relative d-flex align-items-center justify-content-center" style="min-height: 400px;">
+                    {% if jeu_video.imageUrl %}
+                        <img src="{{ asset(jeu_video.imageUrl) }}" 
+                             class="img-fluid w-100 h-100 object-fit-cover position-absolute top-0 start-0" 
+                             alt="{{ jeu_video.titre }}"
+                             style="object-fit: cover;">
+                    {% else %}
+                        <img src="{{ asset('assets/images/placeholder.jpg') }}" 
+                             class="img-fluid w-100 h-100 object-fit-cover position-absolute top-0 start-0" 
+                             alt="Placeholder"
+                             style="object-fit: cover;">
+                    {% endif %}
+                    
+                    {# Preço em destaque #}
+                    <div class="position-absolute top-0 start-0 m-3">
+                        <span class="badge bg-success fs-5 shadow px-3 py-2">
+                            {{ jeu_video.prix|number_format(2, ',') }} €
+                        </span>
+                    </div>
+                </div>
 
-            <tr>
-                <th>Genre</th>
-                <td>{{ jeu_video.genre.nom }}</td>
-            </tr>
-            <tr>
-                <th>Editeur</th>
-                <td>{{ jeu_video.editeur.nom }}</td>
-            </tr>
-        </tbody>
-    </table>
+                {# --- COLUNA DE INFORMAÇÕES --- #}
+                <div class="col-md-7 col-lg-8">
+                    <div class="card-body p-4 p-lg-5 d-flex flex-column h-100">
+                        
+                        {# Cabeçalho #}
+                        <div class="mb-4 border-bottom pb-3">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10 rounded-pill">
+                                    {{ jeu_video.genre.nom }}
+                                </span>
+                                {% if jeu_video.dateSortie %}
+                                    <span class="badge bg-light text-secondary border rounded-pill">
+                                        <i class="bi bi-calendar3 me-1"></i> {{ jeu_video.dateSortie|date('Y') }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                            
+                            <h1 class="display-5 fw-bold text-dark mb-1">{{ jeu_video.titre }}</h1>
+                            <p class="text-muted h5">
+                                Édité par <span class="text-dark fw-semibold">{{ jeu_video.editeur.nom }}</span>
+                            </p>
+                        </div>
 
-    <a href="{{ path('app_jeu_video_index') }}">Retour à la liste</a>
+                        {# Descrição #}
+                        <div class="mb-4 flex-grow-1">
+                            <h5 class="text-uppercase text-muted fs-6 fw-bold mb-3">À propos du jeu</h5>
+                            <p class="text-secondary lh-lg">
+                                {{ jeu_video.description|nl2br }}
+                            </p>
+                        </div>
 
-    <a href="{{ path('app_jeu_video_edit', {'id': jeu_video.id}) }}">Modifier</a>
+                        {# Metadados (Datas) #}
+                        <div class="row g-3 mb-4 pt-3 border-top small text-muted">
+                            <div class="col-6 col-md-4">
+                                <strong class="d-block text-dark">Date de sortie</strong>
+                                {{ jeu_video.dateSortie ? jeu_video.dateSortie|date('d/m/Y') : 'N/A' }}
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <strong class="d-block text-dark">Ajouté le</strong>
+                                {{ jeu_video.createdAt ? jeu_video.createdAt|date('d/m/Y H:i') : '-' }}
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <strong class="d-block text-dark">Dernière maj</strong>
+                                {{ jeu_video.updatedAt ? jeu_video.updatedAt|date('d/m/Y H:i') : '-' }}
+                            </div>
+                        </div>
 
-    {{ include('jeu_video/_delete_form.html.twig') }}
+                        {# Ações #}
+                        <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center bg-light p-3 rounded-3">
+                            <a href="{{ path('app_jeu_video_edit', {'id': jeu_video.id}) }}" class="btn btn-warning text-dark fw-medium px-4">
+                                <i class="bi bi-pencil-square me-2"></i>Modifier
+                            </a>
+
+                            <div class="d-inline-block">
+                                {{ include('jeu_video/_delete_form.html.twig') }}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

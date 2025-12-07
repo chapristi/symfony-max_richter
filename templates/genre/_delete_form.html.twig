@@ -1,4 +1,42 @@
-<form method="post" action="{{ path('app_genre_delete', {'id': genre.id}) }}" onsubmit="return confirm('Confirmer la suppression du genre {{ genre.nom }}');">
-    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ genre.id) }}">
-    <button class="btn">Supprimer</button>
-</form>
+
+
+{% set modal_id = 'deleteModalGenre' ~ genre.id %}
+
+{# 1. The Trigger Button (opens the modal) #}
+<button type="button" 
+        class="{{ button_class|default('btn btn-danger') }}"
+        data-bs-toggle="modal" 
+        data-bs-target="#{{ modal_id }}">
+    <i class="bi bi-trash-fill"></i> Supprimer
+</button>
+
+
+{# 2. The Bootstrap Modal Structure #}
+<div class="modal fade" id="{{ modal_id }}" tabindex="-1" aria-labelledby="{{ modal_id }}Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="{{ modal_id }}Label">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Confirmation de Suppression
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir **définitivement supprimer** le genre :</p>
+                <p class="fw-bold text-danger">{{ genre.nom }}</p>
+                <p class="text-muted small">Cette action est irréversible et pourrait affecter les jeux associés.</p>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Annuler
+                </button>
+                
+                {# The ACTUAL Delete Form Submission #}
+                <form method="post" action="{{ path('app_genre_delete', {'id': genre.id}) }}" style="display: inline;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ genre.id) }}">
+                    <button type="submit" class="btn btn-danger">
+                        Confirmer la Suppression
+                    </

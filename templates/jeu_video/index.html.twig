@@ -1,69 +1,178 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}JeuVideo index{% endblock %}
+{% block title %}Catalogue Jeux Vidéo{% endblock %}
+
 {% block body %}
+    {# --- 1. HERO CAROUSEL (Destaques) --- #}
+    {# Só mostramos se houver jogos na lista #}
+    {% if jeu_videos is not empty %}
+        <div id="gameCarousel" class="carousel slide mb-5 shadow rounded-4 overflow-hidden" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                {% for jeu in jeu_videos|slice(0, 5) %}
+                    <button type="button" data-bs-target="#gameCarousel" data-bs-slide-to="{{ loop.index0 }}" class="{{ loop.first ? 'active' : '' }}" aria-current="{{ loop.first ? 'true' : 'false' }}" aria-label="Slide {{ loop.index }}"></button>
+                {% endfor %}
+            </div>
+            <div class="carousel-inner">
+                {% for jeu in jeu_videos|slice(0, 5) %}
+                    <div class="carousel-item {{ loop.first ? 'active' : '' }}" style="height: 400px; background-color: #212529;">
+                        {# Imagem de Fundo com efeito de escurecimento #}
+                        <div class="position-absolute w-100 h-100" style="
+                            background-image: url('{{ jeu.imageUrl ? asset(jeu.imageUrl) : asset('assets/images/placeholder.jpg') }}');
+                            background-size: cover;
+                            background-position: center;
+                            filter: blur(4px) brightness(0.5);
+                        "></div>
+                        
+                        {# Imagem Nítida e Conteúdo #}
+                        <div class="container h-100 position-relative d-flex align-items-center">
+                            <div class="row align-items-center w-100">
+                                <div class="col-md-4 text-center d-none d-md-block">
+                                    <img src="{{ jeu.imageUrl ? asset(jeu.imageUrl) : asset('assets/images/placeholder.jpg') }}" class="img-fluid rounded-3 shadow-lg" style="max-height: 300px; object-fit: cover;" alt="{{ jeu.titre }}">
+                                </div>
+                                <div class="col-md-8 text-white">
+                                    <span class="badge bg-primary mb-2">{{ jeu.genre.nom }}</span>
+                                    <h2 class="display-4 fw-bold">{{ jeu.titre }}</h2>
+                                    <p class="lead">{{ jeu.description|striptags|slice(0, 100) }}...</p>
+                                    <div class="d-flex gap-3 align-items-center">
+                                        <span class="fs-4 fw-bold text-warning">{{ jeu.prix|number_format(2, ',', ' ') }} €</span>
+                                        <a href="{{ path('app_jeu_video_show', {'id': jeu.id}) }}" class="btn btn-light rounded-pill px-4 fw-bold">
+                                            <i class="bi bi-play-fill"></i> Voir la fiche
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#gameCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#gameCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    {% endif %}
 
-    <h1>Catalogue des jeux vidéo</h1>
+    {# --- 2. BARRA DE FERRAMENTAS --- #}
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 px-2">
+        <div>
+            <h1 class="h3 fw-bold mb-0">Tous les jeux</h1>
+            <p class="text-muted small mb-0">{{ jeu_videos|length }} titres disponibles</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ path('app_jeu_video_new') }}" class="btn btn-primary rounded-pill shadow-sm">
+                <i class="bi bi-plus-lg me-2"></i>Ajouter un jeu
+            </a>
+        </div>
+    </div>
 
-    <table class="table table-hover align-middle">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Image</th>
-            <th>Titre</th>
-            <th>DateSortie</th>
-            <th>Prix</th>
-            <th>Editeur</th>
-            <th>Genre</th>
-            {# NOUVELLE COLONNE #}
-            <th>Propriétaires</th>
-            <th>actions</th>
-        </tr>
-        </thead>
-        <tbody>
+    {# --- 3. GRID DE JOGOS (Substitui a Tabela) --- #}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4 mb-5">
         {% for jeu_video in jeu_videos %}
-            <tr>
-                <td>{{ jeu_video.id }}</td>
-                <td class="text-center" style="max-width: 80px;">
-                    <img alt="Couverture du jeu" src="{{ asset('' ~ jeu_video.imageUrl) }}" class="img-fluid rounded" style="max-height: 50px;" />
-                </td>
-                <td>{{ jeu_video.titre }}</td>
-                <td>{{ jeu_video.dateSortie ? jeu_video.dateSortie|date('d/m/Y') : '' }}</td>
-                <td>{{ jeu_video.prix|number_format(2,',', ' ') }} €</td>
-                <td>{{ jeu_video.editeur.nom }}</td>
-                <td>{{ jeu_video.genre.nom }}</td>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm hover-card transition-all">
+                    {# Imagem do Card #}
+                    <div class="position-relative overflow-hidden rounded-top-3" style="height: 200px;">
+                        {% if jeu_video.imageUrl %}
+                            <img src="{{ asset(jeu_video.imageUrl) }}" class="card-img-top w-100 h-100 object-fit-cover transition-zoom" alt="{{ jeu_video.titre }}">
+                        {% else %}
+                            <img src="{{ asset('assets/images/placeholder.jpg') }}" class="card-img-top w-100 h-100 object-fit-cover transition-zoom" alt="Placeholder">
+                        {% endif %}
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge bg-dark bg-opacity-75 backdrop-blur shadow-sm">
+                                {{ jeu_video.prix|number_format(2,',', ' ') }} €
+                            </span>
+                        </div>
+                    </div>
 
-                <td>
-                    {% if jeu_video.collects is not empty %}
-                        {% set proprietaires = [] %}
+                    <div class="card-body d-flex flex-column pt-3">
+                        {# Header do Card #}
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10 rounded-pill small">
+                                {{ jeu_video.genre.nom }}
+                            </span>
+                            <small class="text-muted" style="font-size: 0.75rem;">
+                                {{ jeu_video.dateSortie ? jeu_video.dateSortie|date('Y') : '' }}
+                            </small>
+                        </div>
 
-                        {% for collect in jeu_video.collects %}
-                            {% if collect.utilisateur %}
-                                {% set proprietaires = proprietaires|merge([collect.utilisateur.pseudo]) %}
-                            {% endif %}
-                        {% endfor %}
+                        <h5 class="card-title fw-bold text-truncate" title="{{ jeu_video.titre }}">
+                            {{ jeu_video.titre }}
+                        </h5>
+                        
+                        <p class="card-text text-muted small mb-3">
+                            <i class="bi bi-building me-1"></i> {{ jeu_video.editeur.nom }}
+                        </p>
 
-                        <span class="badge text-bg-success">{{ jeu_video.collects|length }}</span> :
-                        {{ proprietaires|join(', ') }}
+                        {# Lógica de Proprietários (Visual Moderno) #}
+                        <div class="mt-auto pt-3 border-top border-light">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <small class="fw-bold text-secondary" style="font-size: 0.7rem;">COMMUNAUTÉ</small>
+                                <span class="badge bg-light text-dark border">{{ jeu_video.collects|length }} possesseurs</span>
+                            </div>
+                            
+                            <div class="d-flex align-items-center mb-3 overflow-hidden" style="height: 30px;">
+                                {% if jeu_video.collects is not empty %}
+                                    {% set proprietaires = [] %}
+                                    {% for collect in jeu_video.collects %}
+                                        {% if collect.utilisateur %}
+                                            {% set proprietaires = proprietaires|merge([collect.utilisateur.pseudo]) %}
+                                        {% endif %}
+                                    {% endfor %}
 
-                    {% else %}
-                        <span class="text-muted">Aucun</span>
-                    {% endif %}
-                </td>
+                                    {# Avatar Stack #}
+                                    {% for owner in proprietaires|slice(0, 4) %}
+                                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center border border-white position-relative" 
+                                             style="width: 28px; height: 28px; font-size: 0.7rem; margin-right: -8px; z-index: {{ 10 - loop.index }};"
+                                             title="{{ owner }}">
+                                            {{ owner|slice(0,1)|upper }}
+                                        </div>
+                                    {% endfor %}
 
-                {# Colonne des actions #}
-                <td>
-                    <a href="{{ path('app_jeu_video_show', {'id': jeu_video.id}) }}" class="btn btn-info btn-sm">Consulter</a>
-                    <a href="{{ path('app_jeu_video_edit', {'id': jeu_video.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
-                </td>
-            </tr>
+                                    {% if proprietaires|length > 4 %}
+                                        <div class="rounded-circle bg-light text-muted d-flex align-items-center justify-content-center border border-white position-relative small" 
+                                             style="width: 28px; height: 28px; margin-left: -5px; z-index: 0; font-size: 0.7rem;">
+                                            +{{ proprietaires|length - 4 }}
+                                        </div>
+                                    {% endif %}
+                                {% else %}
+                                    <small class="text-muted fst-italic" style="font-size: 0.8rem;">Soyez le premier !</small>
+                                {% endif %}
+                            </div>
+
+                            {# Ações #}
+                            <div class="d-grid gap-2 d-flex">
+                                <a href="{{ path('app_jeu_video_show', {'id': jeu_video.id}) }}" class="btn btn-outline-primary btn-sm flex-grow-1 rounded-pill">
+                                    <i class="bi bi-eye"></i> Voir
+                                </a>
+                                <a href="{{ path('app_jeu_video_edit', {'id': jeu_video.id}) }}" class="btn btn-light btn-sm text-secondary rounded-circle" title="Modifier">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% else %}
-            <tr>
-                <td colspan="9">Aucun enregistrement trouvé.</td>
-            </tr>
+            <div class="col-12 text-center py-5">
+                <div class="text-muted mb-3"><i class="bi bi-joystick display-1"></i></div>
+                <h3>Catalogue vide</h3>
+                <p>Aucun jeu n'a encore été ajouté.</p>
+                <a href="{{ path('app_jeu_video_new') }}" class="btn btn-primary">Commencer</a>
+            </div>
         {% endfor %}
-        </tbody>
-    </table>
+    </div>
 
-    <a href="{{ path('app_jeu_video_new') }}" class="btn btn-primary">Créer un nouveau jeu</a>
+    <style>
+        /* CSS Específico para esta página */
+        .object-fit-cover { object-fit: cover; }
+        .hover-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
+        .transition-all { transition: all 0.3s ease; }
+        .transition-zoom { transition: transform 0.5s ease; }
+        .hover-card:hover .transition-zoom { transform: scale(1.05); }
+        .backdrop-blur { backdrop-filter: blur(5px); }
+    </style>
 {% endblock %}
