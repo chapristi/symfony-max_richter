@@ -3,19 +3,21 @@
 {% block title %}Détails - {{ jeu_video.titre }}{% endblock %}
 
 {% block body %}
-    <div class="container py-4">
-        {# Navegação Superior #}
+    <div class="container my-4 my-md-5">
+        
+        {# Navegação Supérieure #}
         <div class="mb-4">
-            <a href="{{ path('app_jeu_video_index') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+            <a href="{{ path('app_jeu_video_index') }}" class="btn btn-outline-secondary rounded-pill px-3">
                 <i class="bi bi-arrow-left me-1"></i> Retour au catalogue
             </a>
         </div>
 
-        <div class="card shadow border-0 overflow-hidden">
+        <div class="card shadow-lg border-0 overflow-hidden">
             <div class="row g-0">
                 
-                {# --- COLUNA DA IMAGEM --- #}
-                <div class="col-md-5 col-lg-4 bg-light position-relative d-flex align-items-center justify-content-center" style="min-height: 400px;">
+                {# --- COLONNE DE L'IMAGE (Full width on mobile, side-by-side on MD+) --- #}
+                {# Image takes full 12 columns on mobile, then 5 columns on medium screens #}
+                <div class="col-12 col-md-5 col-lg-4 bg-dark position-relative" style="min-height: 250px;"> 
                     {% if jeu_video.imageUrl %}
                         <img src="{{ asset(jeu_video.imageUrl) }}" 
                              class="img-fluid w-100 h-100 object-fit-cover position-absolute top-0 start-0" 
@@ -27,47 +29,48 @@
                              alt="Placeholder"
                              style="object-fit: cover;">
                     {% endif %}
-                    
-                    {# Preço em destaque #}
-                    <div class="position-absolute top-0 start-0 m-3">
-                        <span class="badge bg-success fs-5 shadow px-3 py-2">
-                            {{ jeu_video.prix|number_format(2, ',') }} €
-                        </span>
-                    </div>
                 </div>
 
-                {# --- COLUNA DE INFORMAÇÕES --- #}
-                <div class="col-md-7 col-lg-8">
+                {# --- COLONNE D'INFORMATIONS (Content) --- #}
+                <div class="col-12 col-md-7 col-lg-8">
                     <div class="card-body p-4 p-lg-5 d-flex flex-column h-100">
                         
-                        {# Cabeçalho #}
+                        {# 1. Title & Price (Highest Priority on Mobile) #}
                         <div class="mb-4 border-bottom pb-3">
-                            <div class="d-flex align-items-center gap-2 mb-2">
-                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10 rounded-pill">
-                                    {{ jeu_video.genre.nom }}
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                {# Price badge (Visible here on all screens) #}
+                                <span class="badge bg-success fs-5 shadow px-3 py-2">
+                                    {{ jeu_video.prix|number_format(2, ',') }} €
                                 </span>
-                                {% if jeu_video.dateSortie %}
-                                    <span class="badge bg-light text-secondary border rounded-pill">
-                                        <i class="bi bi-calendar3 me-1"></i> {{ jeu_video.dateSortie|date('Y') }}
+                                
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10 rounded-pill">
+                                        {{ jeu_video.genre.nom }}
                                     </span>
-                                {% endif %}
+                                    {% if jeu_video.dateSortie %}
+                                        <span class="badge bg-light text-secondary border rounded-pill d-none d-sm-inline-block">
+                                            <i class="bi bi-calendar3 me-1"></i> {{ jeu_video.dateSortie|date('Y') }}
+                                        </span>
+                                    {% endif %}
+                                </div>
                             </div>
                             
-                            <h1 class="display-5 fw-bold text-dark mb-1">{{ jeu_video.titre }}</h1>
-                            <p class="text-muted h5">
-                                Édité par <span class="text-dark fw-semibold">{{ jeu_video.editeur.nom }}</span>
+                            <h1 class="h2 fw-bold text-dark mb-1">{{ jeu_video.titre }}</h1>
+
+                            <p class="text-muted small">
+                                Développé par <span class="text-dark fw-semibold">{{ jeu_video.developpeur.nom }}</span>, édité par <span class="text-dark fw-semibold">{{ jeu_video.editeur.nom }}</span>
                             </p>
                         </div>
 
-                        {# Descrição #}
+                        {# 2. Description #}
                         <div class="mb-4 flex-grow-1">
                             <h5 class="text-uppercase text-muted fs-6 fw-bold mb-3">À propos du jeu</h5>
-                            <p class="text-secondary lh-lg">
+                            <p class="text-secondary lh-lg small">
                                 {{ jeu_video.description|nl2br }}
                             </p>
                         </div>
 
-                        {# Metadados (Datas) #}
+                        {# 3. Metadonnées (Stacked on Mobile) #}
                         <div class="row g-3 mb-4 pt-3 border-top small text-muted">
                             <div class="col-6 col-md-4">
                                 <strong class="d-block text-dark">Date de sortie</strong>
@@ -77,19 +80,22 @@
                                 <strong class="d-block text-dark">Ajouté le</strong>
                                 {{ jeu_video.createdAt ? jeu_video.createdAt|date('d/m/Y H:i') : '-' }}
                             </div>
-                            <div class="col-6 col-md-4">
+                            <div class="col-12 col-md-4">
                                 <strong class="d-block text-dark">Dernière maj</strong>
                                 {{ jeu_video.updatedAt ? jeu_video.updatedAt|date('d/m/Y H:i') : '-' }}
                             </div>
                         </div>
 
-                        {# Ações #}
-                        <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center bg-light p-3 rounded-3">
-                            <a href="{{ path('app_jeu_video_edit', {'id': jeu_video.id}) }}" class="btn btn-warning text-dark fw-medium px-4">
-                                <i class="bi bi-pencil-square me-2"></i>Modifier
+                        {# 4. Actions (Always Stack Vertically on Mobile) #}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-between align-items-center bg-light p-3 rounded-3 mt-auto">
+                            
+                            {# Edit Button #}
+                            <a href="{{ path('app_jeu_video_edit', {'id': jeu_video.id}) }}" class="btn btn-warning text-dark fw-medium flex-grow-1">
+                                <i class="bi bi-pencil-square me-2"></i>Modifier la fiche
                             </a>
 
-                            <div class="d-inline-block">
+                            {# Delete Form #}
+                            <div class="d-grid w-100 d-md-inline-block w-md-auto">
                                 {{ include('jeu_video/_delete_form.html.twig') }}
                             </div>
                         </div>

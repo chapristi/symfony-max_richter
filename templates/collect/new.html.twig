@@ -1,11 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Collect{% endblock %}
+{% block title %}Nouvelle Entrée de Collection{% endblock %}
 
 {% block body %}
-    <h1>Create new Collect</h1>
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8">
+                
+                {# Header Section #}
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="h3 text-dark mb-0">
+                        <i class="bi bi-journal-plus me-2 text-primary"></i> Ajouter un Jeu à la Collection
+                    </h1>
+                    <a href="{{ path('app_collect_index') }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-arrow-left"></i> Retour à la liste
+                    </a>
+                </div>
 
-    {{ include('collect/_form.html.twig') }}
+                {# Card Component for the Form #}
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-4 p-md-5">
+                        <p class="text-muted small mb-4">Remplissez les détails de votre nouvelle entrée de collection.</p>
+                        
+                        {# Rendering the form (assuming _form.html.twig is properly styled) #}
+                        {{ include('collect/_form.html.twig', {'button_label': 'Ajouter à la Collection'}) }}
+                    </div>
+                </div>
 
-    <a href="{{ path('app_collect_index') }}">back to list</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

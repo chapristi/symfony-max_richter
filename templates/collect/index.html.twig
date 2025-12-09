@@ -1,55 +1,75 @@
-{# templates/collect/index.html.twig #}
-
 {% extends 'base.html.twig' %}
 
-{% block title %}Collect index{% endblock %}
+{% block title %}Gestion des Collections{% endblock %}
 
 {% block body %}
-    <h1 class="my-4">Gestion des collections de jeux vidéo</h1>
+    <div class="container my-5">
+        <h1 class="mb-4 text-dark fw-light">
+            <i class="bi bi-people-fill me-2 text-primary"></i> Gestion des collections de jeux vidéo
+        </h1>
 
+        <hr class="mb-4">
 
+        <div class="row">
+            {% for utilisateur in utilisateurs %}
+                
+                {# Define a unique seed for the avatar API (using the ID for persistence) #}
+                {% set avatar_seed = utilisateur.id|default(loop.index) %}
+                
+                {# FIX: Switched to the highly reliable 'fun-emoji' style and explicitly set background color #}
+                {% set avatar_url = 'https://api.dicebear.com/8.x/fun-emoji/svg?seed=' ~ avatar_seed ~ '&size=80&radius=50&backgroundType=solid&backgroundColor=ffffff' %}
+                
+                <div class="col-sm-6 col-lg-4 col-xl-3 mb-4">
+                    <div class="card shadow-sm h-100 border-primary border-3 border-top-0 border-end-0 border-bottom-0">
 
-    <div class="row">
-        {% for utilisateur in utilisateurs %}
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card shadow-sm">
+                        <div class="card-body text-center pt-5">
+                            
+                            {# Profile Photo #}
+                            <img src="{{ avatar_url }}" 
+                                 alt="Avatar de {{ utilisateur.pseudo }}" 
+                                 class="rounded-circle mb-3 border border-2 border-primary" 
+                                 style="width: 80px; height: 80px; object-fit: cover; background-color: white;"> {# Added explicit white background style #}
+                            
+                            {# User Name and Pseudo #}
+                            <h5 class="card-title mb-1 fw-bold text-dark">
+                                {{ utilisateur.prenom }} {{ utilisateur.nom|default('') }}
+                            </h5>
+                            <p class="text-muted small mb-3">@{{ utilisateur.pseudo }}</p>
 
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <strong>[{{ utilisateur.pseudo }}] {{ utilisateur.prenom }} {{ utilisateur.nom|default('') }}</strong>
-                        </h5>
-                    </div>
+                            {# Collection Count #}
+                            {% set count = utilisateur.gameCount|default(0) %}
+                            <p class="badge bg-secondary-subtle text-secondary fw-normal py-2 px-3">
+                                <i class="bi bi-controller me-1"></i> 
+                                {{ count }} jeu{{ count > 1 ? 'x' : '' }} en collection
+                            </p>
 
-                    <div class="card-body">
-                        <p class="card-text">
-                            Email : {{ utilisateur.mail }}
-                        </p>
+                            <hr class="my-3">
 
-                        {% set count = utilisateur.gameCount %}
-                        <p class="text-muted">
-                            {% if count <= 1 %}
-                                {{ count }} jeu dans la collection
-                            {% else %}
-                                {{ count }} jeux dans la collection
-                            {% endif %}
-                        </p>
+                            {# User Info (Optional) #}
+                            <p class="card-text small text-truncate" title="{{ utilisateur.mail }}">
+                                <i class="bi bi-envelope"></i> {{ utilisateur.mail }}
+                            </p>
+                        </div>
+                        
+                        {# Card Footer Actions #}
+                        <div class="card-footer bg-white border-top-0 d-grid gap-2">
+                            <a href="{{ path('app_collect_collection', {'user_id': utilisateur.id}) }}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-eye"></i> Voir les jeux ({{ count }})
+                            </a>
 
-                        <hr>
-
-                        <a href="{{ path('app_collect_collection', {'user_id': utilisateur.id}) }}" class="btn btn-primary btn-sm">
-                            Voir les jeux
-                        </a>
-
-                        <a href="{{ path('app_collect_new', {'id': utilisateur.id}) }}" class="btn btn-success me-2">
-                            Ajouter un jeu
-                        </a>
+                            <a href="{{ path('app_collect_new', {'id': utilisateur.id}) }}" class="btn btn-outline-success btn-sm">
+                                <i class="bi bi-plus-circle"></i> Ajouter un jeu
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% else %}
-            <div class="col-12">
-                <p class="alert alert-info">Aucun utilisateur ou collection trouvée.</p>
-            </div>
-        {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <p class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i> Aucun utilisateur ou collection trouvée.
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

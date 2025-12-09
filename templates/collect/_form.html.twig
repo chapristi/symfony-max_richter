@@ -1,4 +1,14 @@
+
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    
+    {# Assumes form_widget is styled via 'bootstrap_5_layout.html.twig' #}
+    {{ form_widget(form) }} 
+
+    {# Modernized Button - Full width primary action #}
+    <div class="d-grid mt-4">
+        <button type="submit" class="btn btn-primary btn-lg shadow-sm">
+            <i class="bi bi-save-fill me-2"></i> {{ button_label|default('Sauvegarder') }}
+        </button>
+    </div>
+
 {{ form_end(form) }}
