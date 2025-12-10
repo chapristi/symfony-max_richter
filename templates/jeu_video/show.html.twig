@@ -4,98 +4,98 @@
 
 {% block body %}
     <div class="container my-4 my-md-5">
-        
-        {# Navegação Supérieure #}
-        <div class="mb-4">
-            <a href="{{ path('app_jeu_video_index') }}" class="btn btn-outline-secondary rounded-pill px-3">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0 fw-bold text-dark d-none d-sm-block">
+                <i class="bi bi-card-text text-warning me-2"></i>Fiche technique
+            </h1>
+            <a href="{{ path('app_jeu_video_index') }}" class="btn btn-outline-dark rounded-pill px-3 shadow-sm">
                 <i class="bi bi-arrow-left me-1"></i> Retour au catalogue
             </a>
         </div>
 
-        <div class="card shadow-lg border-0 overflow-hidden">
+        <div class="card shadow-lg border-0 overflow-hidden rounded-4">
             <div class="row g-0">
-                
-                {# --- COLONNE DE L'IMAGE (Full width on mobile, side-by-side on MD+) --- #}
-                {# Image takes full 12 columns on mobile, then 5 columns on medium screens #}
-                <div class="col-12 col-md-5 col-lg-4 bg-dark position-relative" style="min-height: 250px;"> 
-                    {% if jeu_video.imageUrl %}
-                        <img src="{{ asset(jeu_video.imageUrl) }}" 
-                             class="img-fluid w-100 h-100 object-fit-cover position-absolute top-0 start-0" 
-                             alt="{{ jeu_video.titre }}"
-                             style="object-fit: cover;">
-                    {% else %}
-                        <img src="{{ asset('assets/images/placeholder.jpg') }}" 
-                             class="img-fluid w-100 h-100 object-fit-cover position-absolute top-0 start-0" 
-                             alt="Placeholder"
-                             style="object-fit: cover;">
-                    {% endif %}
+
+                <div class="col-lg-5 position-relative bg-dark" style="min-height: 300px;">
+                    {% set dynamic_cover_url = 'https://picsum.photos/600/800?random=' ~ jeu_video.id %}
+                    {% set image_src = jeu_video.imageUrl and jeu_video.imageUrl != "" ? asset(jeu_video.imageUrl) : dynamic_cover_url %}
+
+                    <img src="{{ image_src }}"
+                         class="img-fluid w-100 h-100 object-fit-cover position-absolute top-0 start-0"
+                         alt="{{ jeu_video.titre }}"
+                         style="filter: brightness(0.9);">
+
+                    <div class="position-absolute bottom-0 start-0 w-100 p-3 bg-gradient-dark d-lg-none">
+                        <span class="badge bg-warning text-dark fs-4 fw-bold shadow">
+                            {{ jeu_video.prix|number_format(2, ',') }} €
+                        </span>
+                    </div>
                 </div>
 
-                {# --- COLONNE D'INFORMATIONS (Content) --- #}
-                <div class="col-12 col-md-7 col-lg-8">
+                <div class="col-lg-7 bg-white">
                     <div class="card-body p-4 p-lg-5 d-flex flex-column h-100">
-                        
-                        {# 1. Title & Price (Highest Priority on Mobile) #}
-                        <div class="mb-4 border-bottom pb-3">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                {# Price badge (Visible here on all screens) #}
-                                <span class="badge bg-success fs-5 shadow px-3 py-2">
-                                    {{ jeu_video.prix|number_format(2, ',') }} €
+
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <span class="badge bg-dark text-warning border border-secondary mb-2">
+                                    {{ jeu_video.genre.nom }}
                                 </span>
-                                
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10 rounded-pill">
-                                        {{ jeu_video.genre.nom }}
-                                    </span>
-                                    {% if jeu_video.dateSortie %}
-                                        <span class="badge bg-light text-secondary border rounded-pill d-none d-sm-inline-block">
-                                            <i class="bi bi-calendar3 me-1"></i> {{ jeu_video.dateSortie|date('Y') }}
-                                        </span>
-                                    {% endif %}
+                                <h1 class="display-5 fw-bold text-dark mb-1">{{ jeu_video.titre }}</h1>
+                                <div class="text-muted small">
+                                    <i class="bi bi-building me-1"></i> Édité par <strong>{{ jeu_video.editeur.nom }}</strong>
+                                    <span class="mx-2">•</span>
+                                    <i class="bi bi-code-slash me-1"></i> Dév. par <strong>{{ jeu_video.developpeur.nom }}</strong>
                                 </div>
                             </div>
-                            
-                            <h1 class="h2 fw-bold text-dark mb-1">{{ jeu_video.titre }}</h1>
 
-                            <p class="text-muted small">
-                                Développé par <span class="text-dark fw-semibold">{{ jeu_video.developpeur.nom }}</span>, édité par <span class="text-dark fw-semibold">{{ jeu_video.editeur.nom }}</span>
-                            </p>
+                            <div class="text-end d-none d-lg-block">
+                                <span class="display-6 fw-bold text-warning">
+                                    {{ jeu_video.prix|number_format(2, ',') }} €
+                                </span>
+                            </div>
                         </div>
 
-                        {# 2. Description #}
+                        <hr class="border-secondary opacity-10 my-4">
+
                         <div class="mb-4 flex-grow-1">
-                            <h5 class="text-uppercase text-muted fs-6 fw-bold mb-3">À propos du jeu</h5>
-                            <p class="text-secondary lh-lg small">
+                            <h5 class="text-uppercase text-dark fs-6 fw-bold mb-3">
+                                <i class="bi bi-info-circle me-2 text-warning"></i>À propos du jeu
+                            </h5>
+                            <p class="text-secondary lh-lg">
                                 {{ jeu_video.description|nl2br }}
                             </p>
                         </div>
 
-                        {# 3. Metadonnées (Stacked on Mobile) #}
-                        <div class="row g-3 mb-4 pt-3 border-top small text-muted">
-                            <div class="col-6 col-md-4">
-                                <strong class="d-block text-dark">Date de sortie</strong>
-                                {{ jeu_video.dateSortie ? jeu_video.dateSortie|date('d/m/Y') : 'N/A' }}
-                            </div>
-                            <div class="col-6 col-md-4">
-                                <strong class="d-block text-dark">Ajouté le</strong>
-                                {{ jeu_video.createdAt ? jeu_video.createdAt|date('d/m/Y H:i') : '-' }}
-                            </div>
-                            <div class="col-12 col-md-4">
-                                <strong class="d-block text-dark">Dernière maj</strong>
-                                {{ jeu_video.updatedAt ? jeu_video.updatedAt|date('d/m/Y H:i') : '-' }}
+                        <div class="bg-light rounded-3 p-3 mb-4 border">
+                            <div class="row text-center text-sm-start align-items-center">
+                                <div class="col-sm-4 border-end-sm border-secondary-subtle mb-2 mb-sm-0">
+                                    <small class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem;">Sortie</small>
+                                    <div class="fw-bold text-dark">
+                                        {{ jeu_video.dateSortie ? jeu_video.dateSortie|date('d M Y') : 'N/A' }}
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 border-end-sm border-secondary-subtle mb-2 mb-sm-0">
+                                    <small class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem;">Ajouté le</small>
+                                    <div class="fw-bold text-dark">
+                                        {{ jeu_video.createdAt ? jeu_video.createdAt|date('d/m/Y') : '-' }}
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <small class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem;">Dernière Maj</small>
+                                    <div class="fw-bold text-dark">
+                                        {{ jeu_video.updatedAt ? jeu_video.updatedAt|date('d/m/Y') : '-' }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        {# 4. Actions (Always Stack Vertically on Mobile) #}
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-between align-items-center bg-light p-3 rounded-3 mt-auto">
-                            
-                            {# Edit Button #}
-                            <a href="{{ path('app_jeu_video_edit', {'id': jeu_video.id}) }}" class="btn btn-warning text-dark fw-medium flex-grow-1">
-                                <i class="bi bi-pencil-square me-2"></i>Modifier la fiche
+                        <div class="d-flex flex-column flex-sm-row gap-2 mt-auto">
+                            <a href="{{ path('app_jeu_video_edit', {'id': jeu_video.id}) }}" class="btn btn-dark flex-grow-1 rounded-pill fw-bold">
+                                <i class="bi bi-pencil-square text-warning me-2"></i>Modifier la fiche
                             </a>
 
-                            {# Delete Form #}
-                            <div class="d-grid w-100 d-md-inline-block w-md-auto">
+                            <div class="d-inline-block">
                                 {{ include('jeu_video/_delete_form.html.twig') }}
                             </div>
                         </div>
@@ -105,4 +105,5 @@
             </div>
         </div>
     </div>
+
 {% endblock %}

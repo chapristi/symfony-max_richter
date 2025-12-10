@@ -1,60 +1,96 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détails de l'Éditeur : {{ editeur.nom }}{% endblock %}
+{% block title %}Détails Éditeur - {{ editeur.nom }}{% endblock %}
 
 {% block body %}
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
 
-                {# Header and Title #}
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="h2 text-dark mb-0">Éditeur: <span class="fw-bolder">{{ editeur.nom }}</span></h1>
-                    <a href="{{ path('app_editeur_index') }}" class="btn btn-outline-secondary btn-sm">
-                        <i class="bi bi-arrow-left"></i> Retour à la liste
+                    <h1 class="h3 mb-0 fw-bold text-dark">
+                        <i class="bi bi-building-fill text-warning me-2"></i>Fiche Éditeur
+                    </h1>
+                    <a href="{{ path('app_editeur_index') }}" class="btn btn-outline-dark rounded-pill px-3">
+                        <i class="bi bi-arrow-left me-1"></i> Retour liste
                     </a>
                 </div>
 
-                {# Card for Data Display using DL layout #}
-                <div class="card shadow-lg border-0">
-                    <div class="card-body p-4">
-                        <dl class="row mb-0">
-                            
-                            <dt class="col-sm-3 text-muted">ID</dt>
-                            <dd class="col-sm-9">{{ editeur.id }}</dd>
+                <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
 
-                            <dt class="col-sm-3 text-muted">Nom</dt>
-                            <dd class="col-sm-9 fs-5">{{ editeur.nom }}</dd>
+                    <div class="bg-dark text-white p-5 text-center position-relative">
+                        <div class="mb-3">
+                            <span class="d-inline-block p-3 rounded-circle bg-white text-dark shadow">
+                                <i class="bi bi-buildings display-4 text-warning"></i>
+                            </span>
+                        </div>
 
-                            <dt class="col-sm-3 text-muted">Pays</dt>
-                            <dd class="col-sm-9">{{ editeur.pays|default('Non spécifié') }}</dd>
+                        <h2 class="display-5 fw-bold mb-2">{{ editeur.nom }}</h2>
 
-                            <dt class="col-sm-3 text-muted">Site Web</dt>
-                            <dd class="col-sm-9">
-                                {% if editeur.siteWeb %}
-                                    <a href="{{ editeur.siteWeb }}" target="_blank" class="text-primary fw-medium">{{ editeur.siteWeb }} <i class="bi bi-box-arrow-up-right"></i></a>
-                                {% else %}
-                                    N/A
-                                {% endif %}
-                            </dd>
-                            
-                            <dt class="col-sm-3 text-muted">Description</dt>
-                            <dd class="col-sm-9">{{ editeur.description|default('Aucune description') }}</dd>
-
-                        </dl>
+                        {% if editeur.pays %}
+                            <div class="d-inline-flex align-items-center justify-content-center text-white-50">
+                                <i class="bi bi-geo-alt-fill me-1 text-warning"></i>
+                                <span class="fs-5">{{ editeur.pays }}</span>
+                            </div>
+                        {% endif %}
                     </div>
-                </div>
-                
-                {# Actions Group #}
-                <div class="d-flex justify-content-start gap-3 mt-4">
-                    
-                    {# Edit Button #}
-                    <a href="{{ path('app_editeur_edit', {'id': editeur.id}) }}" class="btn btn-primary">
-                        <i class="bi bi-pencil-square"></i> Modifier
-                    </a>
 
-                    {# Delete Form #}
-                    {{ include('editeur/_delete_form.html.twig', {'button_class': 'btn btn-danger'}) }}
+                    <div class="card-body p-4 p-md-5 bg-white">
+
+                        <div class="mb-4">
+                            <h5 class="text-uppercase text-muted fs-6 fw-bold mb-3">
+                                <i class="bi bi-file-text me-2"></i>À propos
+                            </h5>
+                            <div class="p-4 bg-light rounded-3 border">
+                                <p class="mb-0 text-secondary lead fs-6">
+                                    {{ editeur.description|default('Aucune description fournie pour cet éditeur.')|nl2br }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row g-4 mt-2">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center p-3 border rounded-3 h-100">
+                                    <div class="flex-shrink-0">
+                                        <i class="bi bi-globe2 fs-3 text-dark"></i>
+                                    </div>
+                                    <div class="ms-3 overflow-hidden">
+                                        <small class="text-uppercase text-muted fw-bold d-block" style="font-size: 0.7rem;">Site Internet</small>
+                                        {% if editeur.siteWeb %}
+                                            <a href="{{ editeur.siteWeb }}" target="_blank" class="fw-bold text-decoration-none text-dark text-truncate d-block">
+                                                Visiter le site <i class="bi bi-box-arrow-up-right ms-1 small"></i>
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted fst-italic">Non renseigné</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center p-3 border rounded-3 h-100">
+                                    <div class="flex-shrink-0">
+                                        <i class="bi bi-database fs-3 text-dark"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <small class="text-uppercase text-muted fw-bold d-block" style="font-size: 0.7rem;">Identifiant (ID)</small>
+                                        <span class="fw-bold text-dark">#{{ editeur.id }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer bg-light p-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
+                        <a href="{{ path('app_editeur_edit', {'id': editeur.id}) }}" class="btn btn-dark text-warning fw-bold rounded-pill px-4 w-100 w-sm-auto shadow-sm">
+                            <i class="bi bi-pencil-square me-2"></i>Modifier
+                        </a>
+
+                        <div class="w-100 w-sm-auto">
+                            {{ include('editeur/_delete_form.html.twig', {'button_class': 'btn btn-outline-danger w-100 rounded-pill border-0'}) }}
+                        </div>
+                    </div>
                 </div>
 
             </div>

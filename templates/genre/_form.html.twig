@@ -1,11 +1,14 @@
-{{ form_start(form) }}
-    
-    {{ form_widget(form) }} 
+{{ form_start(form, {'attr': {'class': 'row g-3'}}) }}
 
-    <div class="d-grid mt-4">
-        <button type="submit" class="btn btn-primary btn-lg shadow-sm">
-            <i class="bi bi-save-fill me-2"></i> {{ button_label|default('Sauvegarder') }}
+    {{ form_widget(form) }}
+
+<div class="col-12 mt-4">
+    <hr class="border-secondary opacity-25 mb-4">
+    <div class="d-grid">
+        <button type="submit" class="btn btn-dark btn-lg rounded-pill fw-bold shadow-sm py-2">
+            <i class="bi bi-save-fill text-warning me-2"></i> {{ button_label|default('Sauvegarder') }}
         </button>
     </div>
+</div>
 
 {{ form_end(form) }}

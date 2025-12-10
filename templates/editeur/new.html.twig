@@ -6,21 +6,28 @@
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                
-                {# Header Section #}
+
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="h3 text-dark mb-0">Créer un nouvel Éditeur</h1>
-                    <a href="{{ path('app_editeur_index') }}" class="btn btn-outline-secondary btn-sm">
-                        <i class="bi bi-arrow-left"></i> Retour à la liste
+                    <h1 class="h3 mb-0 fw-bold text-dark">
+                        <i class="bi bi-building-fill text-warning me-2"></i>Nouvel Éditeur
+                    </h1>
+                    <a href="{{ path('app_editeur_index') }}" class="btn btn-outline-dark rounded-pill px-3">
+                        <i class="bi bi-arrow-left me-1"></i> Retour
                     </a>
                 </div>
 
-                {# Card Component for the Form #}
-                <div class="card shadow-lg border-0">
-                    <div class="card-body p-4">
-                        <p class="text-muted small mb-4">Remplissez les informations pour ajouter un nouvel éditeur.</p>
-                        
-                        {# Rendering the form #}
+                <div class="card shadow-lg border-0 rounded-4">
+                    <div class="card-header bg-dark text-white p-4">
+                        <p class="mb-0 text-white-50 small text-uppercase fw-bold">Configuration</p>
+                        <h2 class="h5 mb-0 mt-1 text-warning">Ajouter une société</h2>
+                    </div>
+
+                    <div class="card-body p-4 p-md-5 bg-white">
+                        <div class="alert alert-light border-start border-warning border-4 mb-4" role="alert">
+                            <i class="bi bi-info-circle-fill text-warning me-2"></i>
+                            <small>Remplissez les informations ci-dessous pour référencer un nouvel éditeur dans la base de données.</small>
+                        </div>
+
                         {{ include('editeur/_form.html.twig', {'button_label': 'Créer l\'éditeur'}) }}
                     </div>
                 </div>

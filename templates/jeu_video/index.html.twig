@@ -3,40 +3,37 @@
 {% block title %}Catalogue Jeux Vidéo{% endblock %}
 
 {% block body %}
-    {% set local_placeholder_url = asset('assets/images/placeholder.jpg') %}
-    
     <div class="container my-5">
-        
-        {# --- 1. HERO CAROUSEL (Mobile Hidden) --- #}
+
         {% if jeu_videos is not empty %}
-            <div id="gameCarousel" class="carousel slide mb-5 shadow rounded-4 overflow-hidden d-none d-sm-block" data-bs-ride="carousel">
-                <div class="carousel-inner">
+            <div id="gameCarousel" class="carousel slide mb-5 shadow-lg rounded-3 overflow-hidden d-none d-lg-block border border-secondary" data-bs-ride="carousel">
+                <div class="carousel-inner bg-dark">
                     {% for jeu in jeu_videos|slice(0, 5) %}
-                        {# Fallback Logic: Create a searchable URL using the game title #}
-                        {% set dynamic_cover_url = 'https://picsum.photos/800/400?random=' ~ jeu.id %} 
+                        {% set dynamic_cover_url = 'https://picsum.photos/1200/500?random=' ~ jeu.id %}
                         {% set image_src = jeu.imageUrl and jeu.imageUrl != "" ? asset(jeu.imageUrl) : dynamic_cover_url %}
-                        
-                        <div class="carousel-item {{ loop.first ? 'active' : '' }}" style="height: 350px; background-color: #212529;">
+
+                        <div class="carousel-item {{ loop.first ? 'active' : '' }}" style="height: 400px;">
                             <div class="position-absolute w-100 h-100" style="
                                 background-image: url('{{ image_src }}');
                                 background-size: cover;
                                 background-position: center;
-                                filter: blur(4px) brightness(0.5);
-                            "></div>
-                            
-                            <div class="container h-100 position-relative d-flex align-items-center">
+                                filter: blur(8px) brightness(0.4);
+                                "></div>
+
+                            <div class="container h-100 position-relative d-flex align-items-center z-1">
                                 <div class="row align-items-center w-100">
-                                    <div class="col-md-4 text-center d-none d-md-block">
-                                        <img src="{{ image_src }}" class="img-fluid rounded-3 shadow-lg" style="max-height: 250px; object-fit: cover;" alt="{{ jeu.titre }}">
+                                    <div class="col-md-5 text-center">
+                                        <img src="{{ image_src }}" class="img-fluid rounded-3 shadow border border-secondary" style="max-height: 300px; object-fit: cover;" alt="{{ jeu.titre }}">
                                     </div>
-                                    <div class="col-md-8 text-white text-center text-md-start p-4">
-                                        <span class="badge bg-primary mb-2">{{ jeu.genre.nom }}</span>
-                                        <h2 class="display-5 fw-bold">{{ jeu.titre }}</h2>
-                                        <p class="lead small d-none d-md-block">{{ jeu.description|striptags|slice(0, 100) }}...</p>
-                                        <div class="d-flex gap-3 align-items-center justify-content-center justify-content-md-start mt-3">
-                                            <span class="fs-4 fw-bold text-warning">{{ jeu.prix|number_format(2, ',', ' ') }} €</span>
-                                            <a href="{{ path('app_jeu_video_show', {'id': jeu.id}) }}" class="btn btn-light rounded-pill px-4 fw-bold">
-                                                <i class="bi bi-play-fill"></i> Voir la fiche
+                                    <div class="col-md-7 text-white p-4">
+                                        <span class="badge bg-warning text-dark mb-2 fw-bold"><i class="bi bi-tag-fill me-1"></i> {{ jeu.genre.nom }}</span>
+                                        <h2 class="display-4 fw-bold text-light">{{ jeu.titre }}</h2>
+                                        <p class="lead text-white-50">{{ jeu.description|striptags|slice(0, 120) }}...</p>
+
+                                        <div class="d-flex gap-3 align-items-center mt-4">
+                                            <span class="fs-3 fw-bold text-warning">{{ jeu.prix|number_format(2, ',', ' ') }} €</span>
+                                            <a href="{{ path('app_jeu_video_show', {'id': jeu.id}) }}" class="btn btn-outline-light rounded-pill px-4 fw-bold">
+                                                <i class="bi bi-play-fill me-1"></i> Voir la fiche
                                             </a>
                                         </div>
                                     </div>
@@ -45,49 +42,44 @@
                         </div>
                     {% endfor %}
                 </div>
-                {# Carousel Controls (Previous) #}
                 <button class="carousel-control-prev" type="button" data-bs-target="#gameCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
+                    <span class="visually-hidden">Précédent</span>
                 </button>
-                
-                {# Carousel Controls (Next) #}
                 <button class="carousel-control-next" type="button" data-bs-target="#gameCarousel" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
+                    <span class="visually-hidden">Suivant</span>
                 </button>
             </div>
         {% endif %}
 
-        {# --- 2. TOOLBAR --- #}
-        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
             <div class="mb-2 mb-sm-0">
-                <h1 class="h4 fw-bold mb-0">Catalogue Complet</h1>
+                <h1 class="h3 fw-bold mb-0 text-dark"><i class="bi bi-collection-play me-2 text-warning"></i>Catalogue Complet</h1>
                 <p class="text-muted small mb-0">{{ jeu_videos|length }} titres disponibles</p>
             </div>
-            <div class="d-grid d-sm-block gap-2 w-100 w-sm-auto">
-                <a href="{{ path('app_jeu_video_new') }}" class="btn btn-primary rounded-pill shadow-sm">
+            <div class="d-grid d-sm-block w-100 w-sm-auto">
+                <a href="{{ path('app_jeu_video_new') }}" class="btn btn-dark text-warning rounded-pill shadow-sm fw-bold">
                     <i class="bi bi-plus-lg me-2"></i>Ajouter un jeu
                 </a>
             </div>
         </div>
 
-        {# --- 3. GAME GRID  --- #}
         <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4 mb-5">
             {% for jeu_video in jeu_videos %}
-                {% set dynamic_cover_url = 'https://picsum.photos/400/200?random=' ~ jeu_video.id %}
+                {% set dynamic_cover_url = 'https://picsum.photos/400/250?random=' ~ jeu_video.id %}
                 {% set image_src = jeu_video.imageUrl and jeu_video.imageUrl != "" ? asset(jeu_video.imageUrl) : dynamic_cover_url %}
-                
+
                 <div class="col">
-                    <div class="card h-100 border-0 shadow-sm hover-card transition-all">
-                        
-                        <div class="position-relative overflow-hidden rounded-top-3" style="height: 200px;">
-                            <img src="{{ image_src }}" 
-                                 class="card-img-top w-100 h-100 object-fit-cover transition-zoom" 
+                    <div class="card h-100 border-0 shadow-sm hover-card bg-white">
+
+                        <div class="position-relative overflow-hidden rounded-top-2" style="height: 200px;">
+                            <img src="{{ image_src }}"
+                                 class="card-img-top w-100 h-100 object-fit-cover transition-zoom"
                                  alt="{{ jeu_video.titre }}">
-                            
+
                             <div class="position-absolute top-0 end-0 m-2">
-                                <span class="badge bg-dark bg-opacity-75 backdrop-blur shadow-sm">
+                                <span class="badge bg-warning text-dark shadow-sm fw-bold">
                                     {{ jeu_video.prix|number_format(2,',', ' ') }} €
                                 </span>
                             </div>
@@ -95,64 +87,59 @@
 
                         <div class="card-body d-flex flex-column pt-3">
                             <div class="d-flex justify-content-between align-items-start mb-2">
-                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10 rounded-pill small">
+                                <span class="badge bg-dark text-light border border-secondary rounded-pill small">
                                     {{ jeu_video.genre.nom }}
                                 </span>
-                                <small class="text-muted" style="font-size: 0.75rem;">
+                                <small class="text-muted fw-semibold">
                                     {{ jeu_video.dateSortie ? jeu_video.dateSortie|date('Y') : '' }}
                                 </small>
                             </div>
 
-                            <h6 class="card-title fw-bold text-truncate d-sm-none" title="{{ jeu_video.titre }}"> 
-                                {{ jeu_video.titre }}
-                            </h6>
-                            <h5 class="card-title fw-bold text-truncate d-none d-sm-block" title="{{ jeu_video.titre }}"> 
+                            <h5 class="card-title fw-bold text-truncate text-dark" title="{{ jeu_video.titre }}">
                                 {{ jeu_video.titre }}
                             </h5>
-                            
+
                             <p class="card-text text-muted small mb-3">
-                                <i class="bi bi-building me-1"></i> {{ jeu_video.editeur.nom }}
+                                <i class="bi bi-building me-1 text-warning"></i> {{ jeu_video.editeur.nom }}
                             </p>
 
-                            {# Lógica de Proprietários (Avatars) #}
                             <div class="mt-auto pt-3 border-top border-light">
-                                <div class="d-flex align-items-center justify-content-between mb-3">
-                                    <small class="fw-bold text-secondary" style="font-size: 0.7rem;">COMMUNAUTÉ</small>
-                                    <span class="badge bg-light text-dark border">{{ jeu_video.collects|length }} possesseurs</span>
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <small class="fw-bold text-uppercase text-muted" style="font-size: 0.7rem;">Possesseurs</small>
+                                    <span class="badge bg-light text-dark border">{{ jeu_video.collects|length }}</span>
                                 </div>
-                                
-                                <div class="d-flex align-items-center mb-3 overflow-hidden" style="height: 28px;">
+
+                                <div class="d-flex align-items-center mb-3 overflow-hidden" style="height: 30px;">
                                     {% if jeu_video.collects is not empty %}
                                         {% for collect in jeu_video.collects|slice(0, 4) %}
                                             {% set user = collect.utilisateur %}
                                             {% set avatar_seed = user.id|default(user.pseudo|default('user')) %}
-                                            {% set avatar_url = 'https://api.dicebear.com/8.x/fun-emoji/svg?seed=' ~ avatar_seed ~ '&size=28&radius=50' %}
-                                            
-                                            <img src="{{ avatar_url }}" 
-                                                 class="rounded-circle border border-white position-relative shadow-sm"
-                                                 style="width: 28px; height: 28px; margin-right: -8px; z-index: {{ 10 - loop.index }};"
+                                            {% set avatar_url = 'https://api.dicebear.com/9.x/avataaars/svg?seed=' ~ avatar_seed %}
+
+                                            <img src="{{ avatar_url }}"
+                                                 class="rounded-circle border border-2 border-white bg-light position-relative"
+                                                 style="width: 30px; height: 30px; margin-right: -10px; z-index: {{ 10 - loop.index }};"
                                                  title="{{ user.pseudo }}"
                                                  alt="{{ user.pseudo }}">
                                         {% endfor %}
 
                                         {% if jeu_video.collects|length > 4 %}
-                                            <div class="rounded-circle bg-light text-muted d-flex align-items-center justify-content-center border border-white position-relative small" 
-                                                  style="width: 28px; height: 28px; margin-left: -5px; z-index: 0; font-size: 0.7rem;">
+                                            <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center border border-2 border-white position-relative small fw-bold"
+                                                 style="width: 30px; height: 30px; margin-left: -5px; z-index: 0; font-size: 0.7rem;">
                                                 +{{ jeu_video.collects|length - 4 }}
                                             </div>
                                         {% endif %}
                                     {% else %}
-                                        <small class="text-muted fst-italic" style="font-size: 0.8rem;">Soyez le premier à l'ajouter !</small>
+                                        <small class="text-muted fst-italic" style="font-size: 0.75rem;">Soyez le premier !</small>
                                     {% endif %}
                                 </div>
 
-                                {# Actions #}
-                                <div class="d-grid gap-2 d-sm-flex justify-content-sm-between">
-                                    <a href="{{ path('app_jeu_video_show', {'id': jeu_video.id}) }}" class="btn btn-outline-primary btn-sm flex-grow-1 rounded-pill">
-                                        <i class="bi bi-eye"></i> Voir la fiche
+                                <div class="d-flex gap-2">
+                                    <a href="{{ path('app_jeu_video_show', {'id': jeu_video.id}) }}" class="btn btn-outline-dark btn-sm flex-grow-1 rounded-2 fw-semibold">
+                                        Détails
                                     </a>
-                                    <a href="{{ path('app_jeu_video_edit', {'id': jeu_video.id}) }}" class="btn btn-light btn-sm text-secondary rounded-circle" title="Modifier" style="width: 32px; height: 32px; padding: 0;">
-                                        <i class="bi bi-pencil"></i>
+                                    <a href="{{ path('app_jeu_video_edit', {'id': jeu_video.id}) }}" class="btn btn-light btn-sm text-secondary border rounded-2" title="Modifier">
+                                        <i class="bi bi-pencil-fill"></i>
                                     </a>
                                 </div>
                             </div>
@@ -161,21 +148,20 @@
                 </div>
             {% else %}
                 <div class="col-12 text-center py-5">
-                    <div class="text-muted mb-3"><i class="bi bi-joystick display-1"></i></div>
-                    <h3>Catalogue vide</h3>
-                    <p>Aucun jeu n'a encore été ajouté. Voulez-vous en ajouter un ?</p>
-                    <a href="{{ path('app_jeu_video_new') }}" class="btn btn-primary">Commencer</a>
+                    <div class="text-muted mb-3 opacity-25"><i class="bi bi-controller display-1"></i></div>
+                    <h3 class="fw-bold text-dark">Catalogue vide</h3>
+                    <p class="text-muted">Aucun jeu n'a encore été ajouté à la base de données.</p>
+                    <a href="{{ path('app_jeu_video_new') }}" class="btn btn-warning fw-bold mt-2">Ajouter le premier jeu</a>
                 </div>
             {% endfor %}
         </div>
-        <style>
-            /* CSS Específico para esta página */
-            .object-fit-cover { object-fit: cover; }
-            .hover-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
-            .transition-all { transition: all 0.3s ease; }
-            .transition-zoom { transition: transform 0.5s ease; }
-            .hover-card:hover .transition-zoom { transform: scale(1.05); }
-            .backdrop-blur { backdrop-filter: blur(5px); }
-        </style>
     </div>
+
+    <style>
+        .object-fit-cover { object-fit: cover; }
+        .hover-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .hover-card:hover { transform: translateY(-5px); box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; }
+        .transition-zoom { transition: transform 0.5s ease; }
+        .hover-card:hover .transition-zoom { transform: scale(1.05); }
+    </style>
 {% endblock %}
