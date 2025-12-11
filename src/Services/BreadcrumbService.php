@@ -45,7 +45,6 @@ class BreadcrumbService
             'app_collect_edit'        => 'Accueil:app_default > Les Collections:app_collect_index > Modifier l\'item',
         ];
 
-        // Si la route n'est pas dans le mapping, on retourne vide
         if (!array_key_exists($route, $mapping)) {
             return [];
         }

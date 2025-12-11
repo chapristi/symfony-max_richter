@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Editeur;
 use App\Form\EditeurType;
 use App\Repository\EditeurRepository;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,8 +73,13 @@ final class EditeurController extends AbstractController
     public function delete(Request $request, Editeur $editeur, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$editeur->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($editeur);
-            $entityManager->flush();
+            try {
+                $entityManager->remove($editeur);
+                $entityManager->flush();
+                $this->addFlash('success', 'L\'éditeur a été supprimé avec succès.');
+            } catch (ForeignKeyConstraintViolationException $e) {
+                $this->addFlash('error', 'Impossible de supprimer cet éditeur car il est lié à un ou plusieurs jeux. Veuillez supprimer les jeux associés avant.');
+            }
         }
 
         return $this->redirectToRoute('app_editeur_index', [], Response::HTTP_SEE_OTHER);

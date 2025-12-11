@@ -1,0 +1,15 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand text-warning fw-bold fs-4" href="/">
+            <i class="bi bi-controller me-2"></i> Mon App Vidéo
+        </a>
+
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainParams" aria-controls="mainParams" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainParams">
+            {{ knp_menu_render('main', {'allow_safe_labels': true}) }}
+        </div>
+    </div>
+</nav>

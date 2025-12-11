@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Genre;
 use App\Form\GenreType;
 use App\Repository\GenreRepository;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,8 +73,13 @@ final class GenreController extends AbstractController
     public function delete(Request $request, Genre $genre, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$genre->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($genre);
-            $entityManager->flush();
+            try {
+                $entityManager->remove($genre);
+                $entityManager->flush();
+                $this->addFlash('success', 'Le genre a été supprimé.');
+            } catch (ForeignKeyConstraintViolationException $e) {
+                $this->addFlash('error', 'Impossible de supprimer ce genre car il est utilisé par des jeux.');
+            }
         }
 
         return $this->redirectToRoute('app_genre_index', [], Response::HTTP_SEE_OTHER);
