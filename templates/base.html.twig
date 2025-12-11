@@ -2,11 +2,9 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    {# Mandatory for responsive design #}
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Bienvenue sur Mon App{% endblock %}</title>
 
-    {# --- External CSS Dependencies (Bootstrap 5 & Icons) --- #}
     <link rel="icon" href="data:image/svg+xml,
         <svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22>
             <text y=%221.2em%22 font-size=%2296%22>🎮</text>
@@ -15,22 +13,19 @@
     />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    
+
     {% block stylesheets %}{% endblock %}
 
-    {# Global Custom Styling for Polish (Optional but recommended) #}
     <style>
-        /* Ensures the body stretches to fill the viewport height, enabling sticky footer */
         body {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background-color: #f8f9fa; /* Light background for card pages */
+            background-color: #f8f9fa;
         }
         main {
-            flex-grow: 1; /* Allows content block to push the footer down */
+            flex-grow: 1;
         }
-        /* Style for footer links to remove underline unless hovered */
         .footer-link {
             text-decoration: none;
             color: rgba(255, 255, 255, 0.75) !important;
@@ -39,120 +34,127 @@
         .footer-link:hover {
             color: var(--bs-warning) !important;
         }
+
+        /* CSS AJOUTÉ POUR LE FIL D'ARIANE */
+        .breadcrumb-item a {
+            transition: color 0.2s;
+        }
+        .breadcrumb-item a:hover {
+            color: var(--bs-warning) !important;
+            text-decoration: underline !important;
+        }
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: "›";
+            color: #adb5bd;
+            font-size: 1.1em;
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
-    <main>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-            <div class="container-fluid">
-                <a class="navbar-brand text-warning fw-bold fs-4" href="/">
-                    <i class="bi bi-controller me-2"></i> Mon App Vidéo
-                </a>
+<main>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand text-warning fw-bold fs-4" href="/">
+                <i class="bi bi-controller me-2"></i> Mon App Vidéo
+            </a>
 
-                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainParams" aria-controls="mainParams" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainParams" aria-controls="mainParams" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                <div class="collapse navbar-collapse" id="mainParams">
-                    {# FIX: Removed the non-existent template argument. KNP Menu will now use its default renderer which works inside the Bootstrap navbar. #}
-                    {{ knp_menu_render('main', {'allow_safe_labels': true}) }}
-                </div>
-            </div>
-        </nav>
-        
-        {# Content block: all other templates populate this #}
-        {% block body %}{% endblock %}
-    </main>
-    
-    {# Sticky Footer (mt-auto handles pushing it down) #}
-    <footer class="bg-dark text-light pt-5 pb-4 mt-auto shadow-lg">
-        <div class="container text-center text-md-start">
-            <div class="row g-4 text-center text-md-start">
-
-                {# Column 1: App Info #}
-                <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">
-                    <h5 class="text-uppercase mb-4 fw-bold text-warning">
-                        <i class="bi bi-controller me-2"></i> Mon App Vidéo
-                    </h5>
-                    <p class="small text-muted">
-                        Mon app trop cool pour gérer les jeux vidéo et les collections.
-                    </p>
-                </div>
-
-                {# Column 2: Navigation (Mobile stacks, MD starts) #}
-                <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">
-                    <h5 class="text-uppercase mb-4 fw-bold text-warning">Navigation</h5>
-                    
-                    <p class="mb-2">
-                        <a href="{{ path('app_jeu_video_index') }}" class="footer-link">
-                            <i class="bi bi-disc me-2"></i> Les Jeux
-                        </a>
-                    </p>
-                    <p class="mb-2">
-                        <a href="{{ path('app_genre_index') }}" class="footer-link">
-                            <i class="bi bi-tag-fill me-2"></i> Les Genres
-                        </a>
-                    </p>
-                    <p class="mb-2">
-                        <a href="{{ path('app_editeur_index') }}" class="footer-link">
-                            <i class="bi bi-building me-2"></i> Les Éditeurs
-                        </a>
-                    </p>
-                    <p class="mb-2">
-                        <a href="{{ path('app_collect_index') }}" class="footer-link">
-                            <i class="bi bi-collection-fill me-2"></i> Les Collections
-                        </a>
-                    </p>
-                </div>
-                
-                {# Column 3: Contact/Social (Placeholder) #}
-                <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">
-                    <h5 class="text-uppercase mb-4 fw-bold text-warning">Réseaux</h5>
-                    <div class="text-center text-md-start">
-                        <ul class="list-unstyled list-inline mb-0">
-                            <li class="list-inline-item">
-                                <a href="#" class="text-white mx-1 footer-link" title="Facebook">
-                                    <i class="bi bi-facebook fs-4"></i>
-                                </a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="#" class="text-white mx-1 footer-link" title="Twitter">
-                                    <i class="bi bi-twitter-x fs-4"></i>
-                                </a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a href="#" class="text-white mx-1 footer-link" title="LinkedIn">
-                                    <i class="bi bi-linkedin fs-4"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
-
-            <hr class="my-4 border-secondary">
-
-            <div class="row align-items-center">
-                {# Copyright #}
-                <div class="col-12 col-md-7 col-lg-8 text-center text-md-start">
-                    <p class="small mb-0">
-                        Copyright © {{ 'now'|date('Y') }} Tous droits réservés par :
-                        <strong class="text-warning">Louis BEC & Azário COSSA</strong>
-                    </p>
-                </div>
-
-                {# Social Links  #}
-                <div class="col-12 col-md-5 col-lg-4 text-center text-md-end d-none d-md-block">
-                    {# This section is implicitly handled by the previous social block on MD+ screens #}
-                </div>
+            <div class="collapse navbar-collapse" id="mainParams">
+                {{ knp_menu_render('main', {'allow_safe_labels': true}) }}
             </div>
         </div>
-    </footer>
-    
-    {# --- External JS Dependencies --- #}
-    {% block javascripts %}
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    {% endblock %}
+    </nav>
+
+    {% include '_partials/breadcrumb.html.twig' %}
+
+    {% block body %}{% endblock %}
+</main>
+
+<footer class="bg-dark text-light pt-5 pb-4 mt-auto shadow-lg">
+    <div class="container text-center text-md-start">
+        <div class="row g-4 text-center text-md-start">
+
+            <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">
+                <h5 class="text-uppercase mb-4 fw-bold text-warning">
+                    <i class="bi bi-controller me-2"></i> Mon App Vidéo
+                </h5>
+                <p class="small text-muted">
+                    Mon app trop cool pour gérer les jeux vidéo et les collections.
+                </p>
+            </div>
+
+            <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">
+                <h5 class="text-uppercase mb-4 fw-bold text-warning">Navigation</h5>
+
+                <p class="mb-2">
+                    <a href="{{ path('app_jeu_video_index') }}" class="footer-link">
+                        <i class="bi bi-disc me-2"></i> Les Jeux
+                    </a>
+                </p>
+                <p class="mb-2">
+                    <a href="{{ path('app_genre_index') }}" class="footer-link">
+                        <i class="bi bi-tag-fill me-2"></i> Les Genres
+                    </a>
+                </p>
+                <p class="mb-2">
+                    <a href="{{ path('app_editeur_index') }}" class="footer-link">
+                        <i class="bi bi-building me-2"></i> Les Éditeurs
+                    </a>
+                </p>
+                <p class="mb-2">
+                    <a href="{{ path('app_collect_index') }}" class="footer-link">
+                        <i class="bi bi-collection-fill me-2"></i> Les Collections
+                    </a>
+                </p>
+            </div>
+
+            <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">
+                <h5 class="text-uppercase mb-4 fw-bold text-warning">Réseaux</h5>
+                <div class="text-center text-md-start">
+                    <ul class="list-unstyled list-inline mb-0">
+                        <li class="list-inline-item">
+                            <a href="#" class="text-white mx-1 footer-link" title="Facebook">
+                                <i class="bi bi-facebook fs-4"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#" class="text-white mx-1 footer-link" title="Twitter">
+                                <i class="bi bi-twitter-x fs-4"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#" class="text-white mx-1 footer-link" title="LinkedIn">
+                                <i class="bi bi-linkedin fs-4"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <hr class="my-4 border-secondary">
+
+        <div class="row align-items-center">
+            <div class="col-12 col-md-7 col-lg-8 text-center text-md-start">
+                <p class="small mb-0">
+                    Copyright © {{ 'now'|date('Y') }} Tous droits réservés par :
+                    <strong class="text-warning">Louis BEC & Azário COSSA</strong>
+                </p>
+            </div>
+
+            <div class="col-12 col-md-5 col-lg-4 text-center text-md-end d-none d-md-block">
+            </div>
+        </div>
+    </div>
+</footer>
+
+{% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
 </body>
 </html>

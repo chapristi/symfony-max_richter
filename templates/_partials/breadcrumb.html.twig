@@ -1,0 +1,31 @@
+{% set steps = breadcrumb_service.getBreadcrumb() %}
+
+{% if steps is not empty %}
+    <div class="container py-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                {% for item in steps %}
+                    {% if item.route and not loop.last %}
+                        <li class="breadcrumb-item">
+                            <a href="{{ path(item.route) }}" class="text-decoration-none text-secondary hover-warning">
+                                {% if item.label == 'Accueil' %}
+                                    <i class="bi bi-house-door-fill"></i>
+                                {% else %}
+                                    {{ item.label }}
+                                {% endif %}
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="breadcrumb-item active text-dark fw-bold" aria-current="page">
+                            {% if item.label == 'Accueil' %}
+                                <i class="bi bi-house-door-fill"></i>
+                            {% else %}
+                                {{ item.label }}
+                            {% endif %}
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ol>
+        </nav>
+    </div>
+{% endif %}

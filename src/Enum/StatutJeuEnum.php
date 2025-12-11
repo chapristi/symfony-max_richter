@@ -16,7 +16,7 @@ enum StatutJeuEnum: string
     public function getLabel(): string
     {
         return match ($this) {
-            self::POSSEDE => 'POSSEDE',
+            self::POSSEDE => 'Possede',
             self::SOUHAITE   => 'Souhaité',
             self::EN_COURS   => 'En cours',
             self::TERMINE    => 'Terminé',
